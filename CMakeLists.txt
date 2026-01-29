@@ -129,50 +129,26 @@ target_include_directories(autophage_common INTERFACE
 )
 
 # ==============================================================================
-# Dependencies (via FetchContent)
+# Dependencies (Local)
 # ==============================================================================
 
-include(FetchContent)
-
-# spdlog - Fast logging library
+# spdlog
 set(SPDLOG_INSTALL ON CACHE INTERNAL "")
-FetchContent_Declare(
-    spdlog
-    GIT_REPOSITORY https://github.com/gabime/spdlog.git
-    GIT_TAG v1.13.0
-    GIT_SHALLOW TRUE
-)
+add_subdirectory(third_party/spdlog)
 
-# Catch2 - Testing framework
-FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG v3.5.2
-    GIT_SHALLOW TRUE
-)
-
-# nanobench - Benchmarking
-FetchContent_Declare(
-    nanobench
-    GIT_REPOSITORY https://github.com/martinus/nanobench.git
-    GIT_TAG v4.3.11
-    GIT_SHALLOW TRUE
-)
-
-# Make dependencies available
-message(STATUS "Fetching spdlog...")
-FetchContent_MakeAvailable(spdlog)
-
+# Catch2
 if(AUTOPHAGE_BUILD_TESTS)
-    message(STATUS "Fetching Catch2...")
-    FetchContent_MakeAvailable(Catch2)
+    add_subdirectory(third_party/Catch2)
     list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 endif()
 
+# nanobench
 if(AUTOPHAGE_BUILD_BENCHMARKS)
-    message(STATUS "Fetching nanobench...")
-    FetchContent_MakeAvailable(nanobench)
+    add_subdirectory(third_party/nanobench)
 endif()
+
+# SDL2
+add_subdirectory(third_party/SDL)
 
 # ==============================================================================
 # Engine Modules
@@ -180,6 +156,9 @@ endif()
 
 # Core library (types, logging, memory, platform)
 add_subdirectory(src/core)
+
+# Window library (Phase 2)
+add_subdirectory(src/window)
 
 # Profiler library
 add_subdirectory(src/profiler)
@@ -203,6 +182,7 @@ add_subdirectory(src/ecs)
 add_library(autophage INTERFACE)
 target_link_libraries(autophage INTERFACE
     autophage_core
+    autophage_window
     autophage_profiler
     autophage_ecs
 )
