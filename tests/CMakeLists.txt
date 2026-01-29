@@ -35,7 +35,7 @@ catch_discover_tests(autophage_tests_profiler)
 add_executable(autophage_tests_ecs
     ecs/test_entity.cpp
     ecs/test_component.cpp
-    ecs/test_world.cpp
+    ecs/test_system.cpp
     ecs/test_system.cpp
 )
 
@@ -46,6 +46,19 @@ target_link_libraries(autophage_tests_ecs
 )
 
 catch_discover_tests(autophage_tests_ecs)
+
+# Benchmarks
+add_executable(autophage_bench_ecs
+    ecs/benchmark_ecs.cpp
+)
+target_link_libraries(autophage_bench_ecs PRIVATE
+    autophage_core
+    autophage_ecs
+    nanobench
+)
+if(MSVC)
+    target_compile_options(autophage_bench_ecs PRIVATE /arch:AVX2)
+endif()
 
 # Combined test target
 add_custom_target(autophage_tests

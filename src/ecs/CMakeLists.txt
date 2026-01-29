@@ -18,6 +18,9 @@ target_include_directories(autophage_ecs
         $<INSTALL_INTERFACE:include>
 )
 
+add_executable(autophage_ecs_debug ecs_debug.cpp)
+target_link_libraries(autophage_ecs_debug PRIVATE autophage_ecs)
+
 # Enable SIMD for optimized systems
 if(MSVC)
     target_compile_options(autophage_ecs PRIVATE /arch:AVX2)

@@ -3,8 +3,9 @@
 /// @file components.hpp
 /// @brief Common ECS components for Autophage Engine
 
-#include <autophage/core/types.hpp>
 #include <autophage/core/platform.hpp>
+#include <autophage/core/types.hpp>
+#include <autophage/ecs/entity.hpp>
 
 #include <cmath>
 
@@ -15,7 +16,8 @@ namespace autophage::ecs {
 // =============================================================================
 
 /// @brief 3D vector (aligned for SIMD)
-struct AUTOPHAGE_ALIGN(16) Vec3 {
+struct AUTOPHAGE_ALIGN(16) Vec3
+{
     f32 x = 0.0f;
     f32 y = 0.0f;
     f32 z = 0.0f;
@@ -24,48 +26,51 @@ struct AUTOPHAGE_ALIGN(16) Vec3 {
     constexpr Vec3() = default;
     constexpr Vec3(f32 x_, f32 y_, f32 z_) : x(x_), y(y_), z(z_) {}
 
-    [[nodiscard]] constexpr Vec3 operator+(const Vec3& other) const noexcept {
+    [[nodiscard]] constexpr Vec3 operator+(const Vec3& other) const noexcept
+    {
         return {x + other.x, y + other.y, z + other.z};
     }
 
-    [[nodiscard]] constexpr Vec3 operator-(const Vec3& other) const noexcept {
+    [[nodiscard]] constexpr Vec3 operator-(const Vec3& other) const noexcept
+    {
         return {x - other.x, y - other.y, z - other.z};
     }
 
-    [[nodiscard]] constexpr Vec3 operator*(f32 scalar) const noexcept {
+    [[nodiscard]] constexpr Vec3 operator*(f32 scalar) const noexcept
+    {
         return {x * scalar, y * scalar, z * scalar};
     }
 
-    constexpr Vec3& operator+=(const Vec3& other) noexcept {
+    constexpr Vec3& operator+=(const Vec3& other) noexcept
+    {
         x += other.x;
         y += other.y;
         z += other.z;
         return *this;
     }
 
-    constexpr Vec3& operator-=(const Vec3& other) noexcept {
+    constexpr Vec3& operator-=(const Vec3& other) noexcept
+    {
         x -= other.x;
         y -= other.y;
         z -= other.z;
         return *this;
     }
 
-    constexpr Vec3& operator*=(f32 scalar) noexcept {
+    constexpr Vec3& operator*=(f32 scalar) noexcept
+    {
         x *= scalar;
         y *= scalar;
         z *= scalar;
         return *this;
     }
 
-    [[nodiscard]] f32 length() const noexcept {
-        return std::sqrt(x * x + y * y + z * z);
-    }
+    [[nodiscard]] f32 length() const noexcept { return std::sqrt(x * x + y * y + z * z); }
 
-    [[nodiscard]] f32 lengthSquared() const noexcept {
-        return x * x + y * y + z * z;
-    }
+    [[nodiscard]] f32 lengthSquared() const noexcept { return x * x + y * y + z * z; }
 
-    [[nodiscard]] Vec3 normalized() const noexcept {
+    [[nodiscard]] Vec3 normalized() const noexcept
+    {
         f32 len = length();
         if (len > 0.0f) {
             return *this * (1.0f / len);
@@ -81,7 +86,8 @@ struct AUTOPHAGE_ALIGN(16) Vec3 {
 };
 
 /// @brief Quaternion for rotations (aligned for SIMD)
-struct AUTOPHAGE_ALIGN(16) Quat {
+struct AUTOPHAGE_ALIGN(16) Quat
+{
     f32 x = 0.0f;
     f32 y = 0.0f;
     f32 z = 0.0f;
@@ -90,12 +96,11 @@ struct AUTOPHAGE_ALIGN(16) Quat {
     constexpr Quat() = default;
     constexpr Quat(f32 x_, f32 y_, f32 z_, f32 w_) : x(x_), y(y_), z(z_), w(w_) {}
 
-    [[nodiscard]] static constexpr Quat identity() noexcept {
-        return {0, 0, 0, 1};
-    }
+    [[nodiscard]] static constexpr Quat identity() noexcept { return {0, 0, 0, 1}; }
 
     /// @brief Create from Euler angles (radians)
-    [[nodiscard]] static Quat fromEuler(f32 pitch, f32 yaw, f32 roll) noexcept {
+    [[nodiscard]] static Quat fromEuler(f32 pitch, f32 yaw, f32 roll) noexcept
+    {
         f32 cy = std::cos(yaw * 0.5f);
         f32 sy = std::sin(yaw * 0.5f);
         f32 cp = std::cos(pitch * 0.5f);
@@ -103,12 +108,8 @@ struct AUTOPHAGE_ALIGN(16) Quat {
         f32 cr = std::cos(roll * 0.5f);
         f32 sr = std::sin(roll * 0.5f);
 
-        return {
-            sr * cp * cy - cr * sp * sy,
-            cr * sp * cy + sr * cp * sy,
-            cr * cp * sy - sr * sp * cy,
-            cr * cp * cy + sr * sp * sy
-        };
+        return {sr * cp * cy - cr * sp * sy, cr * sp * cy + sr * cp * sy,
+                cr * cp * sy - sr * sp * cy, cr * cp * cy + sr * sp * sy};
     }
 };
 
@@ -117,7 +118,8 @@ struct AUTOPHAGE_ALIGN(16) Quat {
 // =============================================================================
 
 /// @brief Transform component - position, rotation, scale
-struct AUTOPHAGE_ALIGN(64) Transform {
+struct AUTOPHAGE_ALIGN(64) Transform
+{
     Vec3 position{0, 0, 0};
     Quat rotation{0, 0, 0, 1};
     Vec3 scale{1, 1, 1};
@@ -125,8 +127,7 @@ struct AUTOPHAGE_ALIGN(64) Transform {
     constexpr Transform() = default;
     constexpr Transform(Vec3 pos) : position(pos) {}
     constexpr Transform(Vec3 pos, Quat rot) : position(pos), rotation(rot) {}
-    constexpr Transform(Vec3 pos, Quat rot, Vec3 scl)
-        : position(pos), rotation(rot), scale(scl) {}
+    constexpr Transform(Vec3 pos, Quat rot, Vec3 scl) : position(pos), rotation(rot), scale(scl) {}
 };
 
 // =============================================================================
@@ -134,7 +135,8 @@ struct AUTOPHAGE_ALIGN(64) Transform {
 // =============================================================================
 
 /// @brief Velocity component - linear and angular velocity
-struct AUTOPHAGE_ALIGN(32) Velocity {
+struct AUTOPHAGE_ALIGN(32) Velocity
+{
     Vec3 linear{0, 0, 0};
     Vec3 angular{0, 0, 0};
 
@@ -148,20 +150,17 @@ struct AUTOPHAGE_ALIGN(32) Velocity {
 // =============================================================================
 
 /// @brief Hierarchy component for parent-child relationships
-struct Hierarchy {
+struct Hierarchy
+{
     Entity parent{0, 0};
     Entity firstChild{0, 0};
     Entity nextSibling{0, 0};
     Entity prevSibling{0, 0};
     u32 depth = 0;
 
-    [[nodiscard]] bool hasParent() const noexcept {
-        return parent.isValid();
-    }
+    [[nodiscard]] bool hasParent() const noexcept { return parent.isValid(); }
 
-    [[nodiscard]] bool hasChildren() const noexcept {
-        return firstChild.isValid();
-    }
+    [[nodiscard]] bool hasChildren() const noexcept { return firstChild.isValid(); }
 };
 
 // =============================================================================
@@ -169,26 +168,32 @@ struct Hierarchy {
 // =============================================================================
 
 /// @brief Tag: Entity is active and should be processed
-struct Active {};
+struct Active
+{};
 
 /// @brief Tag: Entity is static and won't move
-struct Static {};
+struct Static
+{};
 
 /// @brief Tag: Entity is dirty and needs recalculation
-struct Dirty {};
+struct Dirty
+{};
 
 /// @brief Tag: Entity is visible and should be rendered
-struct Visible {};
+struct Visible
+{};
 
 /// @brief Tag: Entity is marked for destruction
-struct Destroyed {};
+struct Destroyed
+{};
 
 // =============================================================================
 // Physics Components
 // =============================================================================
 
 /// @brief Mass component for physics
-struct Mass {
+struct Mass
+{
     f32 value = 1.0f;
     f32 inverseMass = 1.0f;
 
@@ -197,7 +202,8 @@ struct Mass {
 };
 
 /// @brief Acceleration component
-struct AUTOPHAGE_ALIGN(16) Acceleration {
+struct AUTOPHAGE_ALIGN(16) Acceleration
+{
     Vec3 value{0, 0, 0};
 
     constexpr Acceleration() = default;
@@ -205,7 +211,8 @@ struct AUTOPHAGE_ALIGN(16) Acceleration {
 };
 
 /// @brief Gravity component (per-entity gravity override)
-struct AUTOPHAGE_ALIGN(16) Gravity {
+struct AUTOPHAGE_ALIGN(16) Gravity
+{
     Vec3 value{0, -9.81f, 0};
 
     constexpr Gravity() = default;
@@ -217,32 +224,28 @@ struct AUTOPHAGE_ALIGN(16) Gravity {
 // =============================================================================
 
 /// @brief Axis-aligned bounding box
-struct AUTOPHAGE_ALIGN(32) AABB {
+struct AUTOPHAGE_ALIGN(32) AABB
+{
     Vec3 min{0, 0, 0};
     Vec3 max{0, 0, 0};
 
     constexpr AABB() = default;
     constexpr AABB(Vec3 min_, Vec3 max_) : min(min_), max(max_) {}
 
-    [[nodiscard]] Vec3 center() const noexcept {
-        return Vec3{
-            (min.x + max.x) * 0.5f,
-            (min.y + max.y) * 0.5f,
-            (min.z + max.z) * 0.5f
-        };
+    [[nodiscard]] Vec3 center() const noexcept
+    {
+        return Vec3{(min.x + max.x) * 0.5f, (min.y + max.y) * 0.5f, (min.z + max.z) * 0.5f};
     }
 
-    [[nodiscard]] Vec3 extents() const noexcept {
-        return Vec3{
-            (max.x - min.x) * 0.5f,
-            (max.y - min.y) * 0.5f,
-            (max.z - min.z) * 0.5f
-        };
+    [[nodiscard]] Vec3 extents() const noexcept
+    {
+        return Vec3{(max.x - min.x) * 0.5f, (max.y - min.y) * 0.5f, (max.z - min.z) * 0.5f};
     }
 };
 
 /// @brief Bounding sphere
-struct BoundingSphere {
+struct BoundingSphere
+{
     Vec3 center{0, 0, 0};
     f32 radius = 0.0f;
 

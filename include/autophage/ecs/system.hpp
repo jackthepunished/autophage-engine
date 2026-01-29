@@ -3,10 +3,11 @@
 /// @file system.hpp
 /// @brief System definitions for ECS
 
-#include <autophage/core/types.hpp>
 #include <autophage/core/type_id.hpp>
+#include <autophage/core/types.hpp>
 
 #include <functional>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -20,7 +21,8 @@ class World;
 // =============================================================================
 
 /// @brief Base interface for all systems
-class ISystem {
+class ISystem
+{
 public:
     virtual ~ISystem() = default;
 
@@ -54,31 +56,22 @@ public:
 
 /// @brief Base class for systems with common functionality
 /// @tparam Derived CRTP derived class
-template <typename Derived>
-class System : public ISystem {
+template <typename Derived> class System : public ISystem
+{
 public:
-    [[nodiscard]] TypeId systemId() const noexcept override {
-        return typeId<Derived>();
-    }
+    [[nodiscard]] TypeId systemId() const noexcept override { return typeId<Derived>(); }
 
-    [[nodiscard]] const char* name() const noexcept override {
-        return name_.c_str();
-    }
+    [[nodiscard]] const char* name() const noexcept override { return name_.c_str(); }
 
     void init([[maybe_unused]] World& world) override {}
     void shutdown([[maybe_unused]] World& world) override {}
 
-    [[nodiscard]] bool isEnabled() const noexcept override {
-        return enabled_;
-    }
+    [[nodiscard]] bool isEnabled() const noexcept override { return enabled_; }
 
-    void setEnabled(bool enabled) override {
-        enabled_ = enabled;
-    }
+    void setEnabled(bool enabled) override { enabled_ = enabled; }
 
 protected:
-    explicit System(std::string name = "UnnamedSystem")
-        : name_(std::move(name)) {}
+    explicit System(std::string name = "UnnamedSystem") : name_(std::move(name)) {}
 
 private:
     std::string name_;
@@ -90,26 +83,33 @@ private:
 // =============================================================================
 
 /// @brief Variant type for system implementations
-enum class SystemVariant : u8 {
-    Scalar,      // Basic scalar implementation
-    SIMD,        // SIMD-optimized implementation
-    GPU,         // GPU-accelerated implementation
-    Approximate, // Degraded/approximate implementation
+enum class SystemVariant : u8
+{
+    Scalar,       // Basic scalar implementation
+    SIMD,         // SIMD-optimized implementation
+    GPU,          // GPU-accelerated implementation
+    Approximate,  // Degraded/approximate implementation
 };
 
 /// @brief Convert variant to string
-[[nodiscard]] inline constexpr const char* toString(SystemVariant variant) noexcept {
+[[nodiscard]] inline constexpr const char* toString(SystemVariant variant) noexcept
+{
     switch (variant) {
-        case SystemVariant::Scalar: return "Scalar";
-        case SystemVariant::SIMD: return "SIMD";
-        case SystemVariant::GPU: return "GPU";
-        case SystemVariant::Approximate: return "Approximate";
+        case SystemVariant::Scalar:
+            return "Scalar";
+        case SystemVariant::SIMD:
+            return "SIMD";
+        case SystemVariant::GPU:
+            return "GPU";
+        case SystemVariant::Approximate:
+            return "Approximate";
     }
     return "Unknown";
 }
 
 /// @brief System with multiple implementations that can be hot-swapped
-class IVariantSystem : public ISystem {
+class IVariantSystem : public ISystem
+{
 public:
     /// @brief Get available variants
     [[nodiscard]] virtual std::vector<SystemVariant> availableVariants() const = 0;
@@ -127,11 +127,12 @@ public:
 // =============================================================================
 
 /// @brief Manages system registration and execution order
-class SystemRegistry {
+class SystemRegistry
+{
 public:
     /// @brief Register a system
-    template <typename T, typename... Args>
-    T& registerSystem(Args&&... args) {
+    template <typename T, typename... Args> T& registerSystem(Args&&... args)
+    {
         auto system = std::make_unique<T>(std::forward<Args>(args)...);
         T& ref = *system;
         systems_.push_back(std::move(system));
@@ -139,8 +140,8 @@ public:
     }
 
     /// @brief Get a system by type
-    template <typename T>
-    [[nodiscard]] T* getSystem() {
+    template <typename T> [[nodiscard]] T* getSystem()
+    {
         TypeId id = typeId<T>();
         for (auto& system : systems_) {
             if (system->systemId() == id) {
@@ -151,14 +152,16 @@ public:
     }
 
     /// @brief Initialize all systems
-    void initAll(World& world) {
+    void initAll(World& world)
+    {
         for (auto& system : systems_) {
             system->init(world);
         }
     }
 
     /// @brief Update all enabled systems
-    void updateAll(World& world, f32 dt) {
+    void updateAll(World& world, f32 dt)
+    {
         for (auto& system : systems_) {
             if (system->isEnabled()) {
                 system->update(world, dt);
@@ -167,7 +170,8 @@ public:
     }
 
     /// @brief Shutdown all systems
-    void shutdownAll(World& world) {
+    void shutdownAll(World& world)
+    {
         // Shutdown in reverse order
         for (auto it = systems_.rbegin(); it != systems_.rend(); ++it) {
             (*it)->shutdown(world);
@@ -175,19 +179,13 @@ public:
     }
 
     /// @brief Get all systems
-    [[nodiscard]] const std::vector<std::unique_ptr<ISystem>>& systems() const {
-        return systems_;
-    }
+    [[nodiscard]] const std::vector<std::unique_ptr<ISystem>>& systems() const { return systems_; }
 
     /// @brief Get number of systems
-    [[nodiscard]] usize count() const noexcept {
-        return systems_.size();
-    }
+    [[nodiscard]] usize count() const noexcept { return systems_.size(); }
 
     /// @brief Clear all systems
-    void clear() {
-        systems_.clear();
-    }
+    void clear() { systems_.clear(); }
 
 private:
     std::vector<std::unique_ptr<ISystem>> systems_;

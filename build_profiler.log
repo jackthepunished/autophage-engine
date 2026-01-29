@@ -4,5 +4,5 @@
   Catch2WithMain.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\Catch2Maind.lib
   spdlog.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\spdlogd.lib
   autophage_core.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_core.lib
-  autophage_ecs.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_ecs.lib
-  autophage_tests_ecs.vcxproj -> D:\dev\autophage-engine\build\bin\Debug\autophage_tests_ecs.exe
+  autophage_profiler.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_profiler.lib
+  autophage_tests_profiler.vcxproj -> D:\dev\autophage-engine\build\bin\Debug\autophage_tests_profiler.exe

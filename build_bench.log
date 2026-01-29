@@ -1,0 +1,192 @@
+﻿MSBuild version 17.14.40+3e7442088 for .NET Framework
+
+  spdlog.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\spdlogd.lib
+  autophage_core.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_core.lib
+  autophage_ecs.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_ecs.lib
+  nanobench.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\nanobench.lib
+  benchmark_ecs.cpp
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(152,12): error C3646: 'parent': bilinmeyen geçersiz kılma belirticisi [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(152,18): error C2059: sözdizimi hatası: '{' [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(152,18): error C2334: '{' öncesinde beklenmeyen belirteçler; görünen işlev gövdesi atlanıyor [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(153,12): error C3646: 'firstChild': bilinmeyen geçersiz kılma belirticisi [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(153,22): error C2059: sözdizimi hatası: '{' [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(153,22): error C2334: '{' öncesinde beklenmeyen belirteçler; görünen işlev gövdesi atlanıyor [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(154,12): error C3646: 'nextSibling': bilinmeyen geçersiz kılma belirticisi [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(154,23): error C2059: sözdizimi hatası: '{' [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(154,23): error C2334: '{' öncesinde beklenmeyen belirteçler; görünen işlev gövdesi atlanıyor [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(155,12): error C3646: 'prevSibling': bilinmeyen geçersiz kılma belirticisi [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(155,23): error C2059: sözdizimi hatası: '{' [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(155,23): error C2334: '{' öncesinde beklenmeyen belirteçler; görünen işlev gövdesi atlanıyor [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(159,16): error C2065: 'parent': bildirimi yapılmamış tanımlayıcı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(163,16): error C2065: 'firstChild': bildirimi yapılmamış tanımlayıcı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(178,42): error C2039: 'unique_ptr': bir 'std' üyesi değil [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\functional(31,1):
+      'std' bildirimine bakın
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(178,53): error C2275: 'autophage::ecs::ISystem': tür yerine bir ifade bekleniyordu [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(178,30): error C2974: 'std::vector': '_Ty' için şablon bağımsız değişkeni geçersiz, tür bekleniyor [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\vector(442,7):
+      'std::vector' bildirimine bakın
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(178,30): error C2976: 'std::vector': çok az sayıda şablon bağımsız değişkeni var [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\vector(442,7):
+      'std::vector' bildirimine bakın
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(178,60): error C2059: sözdizimi hatası: '>' [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(178,80): error C2334: '{' öncesinde beklenmeyen belirteçler; görünen işlev gövdesi atlanıyor [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(193,22): error C2039: 'unique_ptr': bir 'std' üyesi değil [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\functional(31,1):
+      'std' bildirimine bakın
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(193,33): error C2275: 'autophage::ecs::ISystem': tür yerine bir ifade bekleniyordu [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(193,10): error C2974: 'std::vector': '_Ty' için şablon bağımsız değişkeni geçersiz, tür bekleniyor [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\vector(442,7):
+      'std::vector' bildirimine bakın
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(193,10): error C2976: 'std::vector': çok az sayıda şablon bağımsız değişkeni var [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\vector(442,7):
+      'std::vector' bildirimine bakın
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(193,40): error C2059: sözdizimi hatası: '>' [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(193,51): error C2238: ';' öncesinde beklenmeyen belirteçler [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(135,41): error C3878: sözdizimi hatası: 'simple-type-specifier'den sonra beklenmeyen belirteç '>' [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\system.hpp(135,41):
+      şunlardan biri yok: '(' '{' ?
+      D:\dev\autophage-engine\include\autophage\ecs\system.hpp(134,8):
+      Derleyicinin oluşturduğu 'T &autophage::ecs::SystemRegistry::registerSystem(Args ...)' işlevinde bu tanılama oluştu
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(135,41): error C3878: sözdizimi hatası: 'simple-declaration'den sonra beklenmeyen belirteç '>' [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\system.hpp(134,8):
+      Derleyicinin oluşturduğu 'T &autophage::ecs::SystemRegistry::registerSystem(Args ...)' işlevinde bu tanılama oluştu
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(135,67): error C2760: söz dizimi hatası: burada '...' beklenmiyordu; ')' bekleniyordu [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\system.hpp(134,8):
+      Derleyicinin oluşturduğu 'T &autophage::ecs::SystemRegistry::registerSystem(Args ...)' işlevinde bu tanılama oluştu
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(135,70): error C2760: söz dizimi hatası: burada ')' beklenmiyordu; ';' bekleniyordu [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\system.hpp(134,8):
+      Derleyicinin oluşturduğu 'T &autophage::ecs::SystemRegistry::registerSystem(Args ...)' işlevinde bu tanılama oluştu
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(135,70): error C3878: sözdizimi hatası: 'expression-statement'den sonra beklenmeyen belirteç ')' [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\system.hpp(134,8):
+      Derleyicinin oluşturduğu 'T &autophage::ecs::SystemRegistry::registerSystem(Args ...)' işlevinde bu tanılama oluştu
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(137,9): error C2065: 'systems_': bildirimi yapılmamış tanımlayıcı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\system.hpp(134,8):
+      Derleyicinin oluşturduğu 'T &autophage::ecs::SystemRegistry::registerSystem(Args ...)' işlevinde bu tanılama oluştu
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(145,29): error C3861: 'systems_': tanımlayıcı bulunamadı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\system.hpp(143,22):
+      Derleyicinin oluşturduğu 'T *autophage::ecs::SystemRegistry::getSystem(void)' işlevinde bu tanılama oluştu
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(145,29): error C2065: 'systems_': bildirimi yapılmamış tanımlayıcı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\system.hpp(143,22):
+      Derleyicinin oluşturduğu 'T *autophage::ecs::SystemRegistry::getSystem(void)' işlevinde bu tanılama oluştu
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(155,29): error C2065: 'systems_': bildirimi yapılmamış tanımlayıcı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(155,20): error C2530: 'system': başvuruların başlatılması gerekir [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(155,20): error C3531: 'system': türü 'auto' içeren bir simgenin bir başlatıcısı olmalıdır [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(155,27): error C2143: sözdizimi hatası: ';' eksik (':' öncesinde) [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(155,37): error C2143: sözdizimi hatası: ';' eksik (')' öncesinde) [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(162,29): error C2065: 'systems_': bildirimi yapılmamış tanımlayıcı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(162,20): error C2530: 'system': başvuruların başlatılması gerekir [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(162,20): error C3531: 'system': türü 'auto' içeren bir simgenin bir başlatıcısı olmalıdır [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(162,27): error C2143: sözdizimi hatası: ';' eksik (':' öncesinde) [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(162,37): error C2143: sözdizimi hatası: ';' eksik (')' öncesinde) [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(172,24): error C2065: 'systems_': bildirimi yapılmamış tanımlayıcı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(172,43): error C3536: 'it': başlatılmadan önce kullanılamaz [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(172,49): error C2065: 'systems_': bildirimi yapılmamış tanımlayıcı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(173,14): error C2100: '<error type>' türündeki bir işlenene başvurulamaz [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(184,16): error C2065: 'systems_': bildirimi yapılmamış tanımlayıcı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\system.hpp(189,9): error C2065: 'systems_': bildirimi yapılmamış tanımlayıcı [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\systems.hpp(238,92): error C2039: 'parent': bir 'autophage::ecs::Hierarchy' üyesi değil [D:\dev\autophage-engine\build\tests\autophage_bench_ecs.vcxproj]
+  (compiling source file '../../tests/ecs/benchmark_ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\components.hpp(151,8):
+      'autophage::ecs::Hierarchy' bildirimine bakın
+  
