@@ -13,6 +13,9 @@ class WindowSDL : public IWindow
 public:
     ~WindowSDL() override
     {
+        if (renderer_) {
+            SDL_DestroyRenderer(renderer_);
+        }
         if (window_) {
             SDL_DestroyWindow(window_);
         }
@@ -40,6 +43,20 @@ public:
 
         if (!window_) {
             LOG_ERROR("Failed to create SDL window: {}", SDL_GetError());
+            return false;
+        }
+
+        // Create renderer
+        renderer_ =
+            SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        if (!renderer_) {
+            LOG_WARN("Failed to create accelerated renderer, falling back to software: {}",
+                     SDL_GetError());
+            renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_SOFTWARE);
+        }
+
+        if (!renderer_) {
+            LOG_ERROR("Failed to create SDL renderer: {}", SDL_GetError());
             return false;
         }
 
@@ -71,11 +88,19 @@ public:
 
     [[nodiscard]] bool shouldClose() const override { return shouldClose_; }
 
-    void swapBuffers() override
+    void present() override { SDL_RenderPresent(renderer_); }
+
+    void clear(u8 r, u8 g, u8 b, u8 a) override
     {
-        // Placeholder for swap buffers (requires GL/Vulkan context)
-        // For now, if we had a surface, we would update it
-        // SDL_UpdateWindowSurface(window_);
+        SDL_SetRenderDrawColor(renderer_, r, g, b, a);
+        SDL_RenderClear(renderer_);
+    }
+
+    void drawRect(i32 x, i32 y, i32 w, i32 h, u8 r, u8 g, u8 b, u8 a) override
+    {
+        SDL_Rect rect{x, y, w, h};
+        SDL_SetRenderDrawColor(renderer_, r, g, b, a);
+        SDL_RenderFillRect(renderer_, &rect);
     }
 
     [[nodiscard]] u32 width() const override { return width_; }
@@ -85,6 +110,7 @@ public:
 
 private:
     SDL_Window* window_ = nullptr;
+    SDL_Renderer* renderer_ = nullptr;
     bool shouldClose_ = false;
     u32 width_ = 0;
     u32 height_ = 0;

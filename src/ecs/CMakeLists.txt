@@ -4,12 +4,14 @@
 
 add_library(autophage_ecs STATIC
     ecs.cpp
+    systems/render_system.cpp
 )
 
 target_link_libraries(autophage_ecs
     PUBLIC
         autophage_common
         autophage_core
+        autophage_window
 )
 
 target_include_directories(autophage_ecs

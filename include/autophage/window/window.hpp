@@ -8,7 +8,6 @@
 #include <memory>
 #include <string>
 
-
 namespace autophage {
 
 /// @brief Configuration for creating a window
@@ -37,8 +36,14 @@ public:
     /// @brief Check if the window should close
     [[nodiscard]] virtual bool shouldClose() const = 0;
 
-    /// @brief Swap buffers (for double buffering)
-    virtual void swapBuffers() = 0;
+    /// @brief Swap buffers (presents the rendered frame)
+    virtual void present() = 0;
+
+    /// @brief Clear the screen with a specific color
+    virtual void clear(u8 r, u8 g, u8 b, u8 a = 255) = 0;
+
+    /// @brief Draw a filled rectangle (debug/placeholder rendering)
+    virtual void drawRect(i32 x, i32 y, i32 w, i32 h, u8 r, u8 g, u8 b, u8 a = 255) = 0;
 
     /// @brief Get window width
     [[nodiscard]] virtual u32 width() const = 0;

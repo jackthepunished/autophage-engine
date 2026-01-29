@@ -253,4 +253,20 @@ struct BoundingSphere
     constexpr BoundingSphere(Vec3 c, f32 r) : center(c), radius(r) {}
 };
 
+// =============================================================================
+// Rendering Components
+// =============================================================================
+
+/// @brief Renderable component (basic color/shape info)
+struct Renderable
+{
+    u8 r = 255;
+    u8 g = 255;
+    u8 b = 255;
+    u8 a = 255;
+
+    constexpr Renderable() = default;
+    constexpr Renderable(u8 r_, u8 g_, u8 b_, u8 a_ = 255) : r(r_), g(g_), b(b_), a(a_) {}
+};
+
 }  // namespace autophage::ecs
