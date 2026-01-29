@@ -5,8 +5,9 @@
 # Core module tests
 add_executable(autophage_tests_core
     core/test_types.cpp
-    core/test_memory.cpp
     core/test_logger.cpp
+    core/test_memory.cpp
+    core/test_result.cpp
 )
 
 target_link_libraries(autophage_tests_core
@@ -35,7 +36,6 @@ catch_discover_tests(autophage_tests_profiler)
 add_executable(autophage_tests_ecs
     ecs/test_entity.cpp
     ecs/test_component.cpp
-    ecs/test_system.cpp
     ecs/test_system.cpp
 )
 

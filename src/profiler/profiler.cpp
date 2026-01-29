@@ -110,9 +110,24 @@ void endFrame()
     // per-frame allocs.
     g_profiler.currentFrame.memoryUsed = memStats.currentBytes;
 
-    // TODO: Capture hardware counters (PAPI / RDTSC)
-    // g_profiler.currentFrame.cpuCycles = ...
-    // g_profiler.currentFrame.cacheMisses = ...
+    // Capture CPU cycles
+    // Note: This is a timestamp counter, not necessarily strict execution cycles,
+    // but useful for relative cost.
+    // On Windows/MSVC, __rdtsc() is available via <intrin.h> (included via specialized headers or
+    // implicitly) We need to ensure we have the intrinsic.
+#ifdef AUTOPHAGE_PLATFORM_WINDOWS
+    g_profiler.currentFrame.cpuCycles = __rdtsc();
+#else
+    // Fallback for x86_64 non-Windows (GCC/Clang)
+    unsigned int lo, hi;
+    __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
+    g_profiler.currentFrame.cpuCycles = ((unsigned long long)hi << 32) | lo;
+#endif
+
+    // TODO: Hardware counters for Cache/Branch are complex on Windows (require ETW/Drivers).
+    // We leave them as 0 for now or integrate a library later.
+    g_profiler.currentFrame.cacheMisses = 0;
+    g_profiler.currentFrame.branchMispredictions = 0;
 
     // Add to history
     {

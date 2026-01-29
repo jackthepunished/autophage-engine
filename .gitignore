@@ -30,3 +30,7 @@ cmake_install.cmake
 # OS
 .DS_Store
 Thumbs.db
+
+# AI/Agent
+.opencode/
+.gemini/
