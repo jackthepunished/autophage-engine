@@ -1,140 +1,103 @@
-/// @file main.cpp
-/// @brief Autophage Engine Demo Application
-
-#include <autophage/core/types.hpp>
-#include <autophage/core/platform.hpp>
 #include <autophage/core/logger.hpp>
-#include <autophage/core/memory.hpp>
-#include <autophage/profiler/profiler.hpp>
-#include <autophage/profiler/scoped_timer.hpp>
+#include <autophage/core/types.hpp>
+#include <autophage/ecs/components.hpp>
+#include <autophage/ecs/systems/render_system.hpp>
+#include <autophage/ecs/world.hpp>
+#include <autophage/window/window.hpp>
 
-#include <iostream>
-#include <thread>
 #include <chrono>
-#include <random>
+#include <thread>
 
 using namespace autophage;
 
-// Simulated workload
-void simulatePhysics(f64 dt) {
-    AUTOPHAGE_PROFILE_FUNCTION();
-    
-    // Simulate some work
-    volatile f64 result = 0;
-    for (int i = 0; i < 1000; ++i) {
-        result += std::sin(static_cast<f64>(i) * dt);
+int main()
+{
+    // 1. Initialize Logger
+    initLogger("AutophageDemo", LogLevel::Debug);
+    LOG_INFO("Starting Autophage Engine Demo...");
+
+    // 2. Create Window
+    WindowConfig config;
+    config.title = "Autophage Direct Demo";
+    config.width = 800;
+    config.height = 600;
+
+    auto window = createWindow();
+    if (!window || !window->init(config)) {
+        LOG_ERROR("Failed to create window");
+        return -1;
     }
-}
 
-void simulateRendering() {
-    AUTOPHAGE_PROFILE_FUNCTION();
-    
-    // Simulate rendering work
-    std::this_thread::sleep_for(std::chrono::microseconds(500));
-}
+    // 3. Setup ECS
+    ecs::World world;
 
-void runFrame(f64 dt) {
-    AUTOPHAGE_PROFILE_SCOPE("Frame");
-    
-    simulatePhysics(dt);
-    simulateRendering();
-}
+    // Register RenderSystem
+    world.registerSystem<ecs::RenderSystem>(*window);
 
-int main() {
     // Initialize systems
-    initLogger("autophage-demo", LogLevel::Debug);
-    initProfiler(300);  // Keep 300 frames of history (5 seconds at 60fps)
+    world.init();
 
-    LOG_INFO("===========================================");
-    LOG_INFO("  Autophage Engine Demo");
-    LOG_INFO("===========================================");
+    // 4. Create Entities
 
-    // Print platform info
-    auto platform = getPlatformInfo();
-    LOG_INFO("Platform: {}", platform.name);
-    LOG_INFO("Compiler: {} (version {})", platform.compiler, platform.compilerVersion);
-    LOG_INFO("Arch: {}", platform.arch);
-    LOG_INFO("SIMD Level: {} bits", platform.simdLevel);
-    LOG_INFO("Build: {}", platform.build);
-    LOG_INFO("");
+    // Entity 1: Red Box in center
+    auto e1 = world.createEntity();
+    world.addComponent<ecs::Transform>(
+        e1, ecs::Transform(ecs::Vec3{400.0f, 300.0f, 0.0f}, ecs::Quat::identity(),
+                           ecs::Vec3{50.0f, 50.0f, 1.0f}));
+    world.addComponent<ecs::Renderable>(e1, ecs::Renderable(255, 0, 0, 255));  // Red
+    world.addComponent<ecs::Visible>(e1);
 
-    // Test memory allocators
-    {
-        LOG_INFO("Testing memory allocators...");
-        
-        LinearAllocator arena(1024 * 1024, MemoryTag::Temporary);
-        LOG_INFO("  LinearAllocator: {} bytes capacity", arena.capacity());
+    // Entity 2: Blue Box moving
+    auto e2 = world.createEntity();
+    world.addComponent<ecs::Transform>(
+        e2, ecs::Transform(ecs::Vec3{100.0f, 100.0f, 0.0f}, ecs::Quat::identity(),
+                           ecs::Vec3{30.0f, 30.0f, 1.0f}));
+    world.addComponent<ecs::Renderable>(e2, ecs::Renderable(0, 0, 255, 255));  // Blue
+    world.addComponent<ecs::Visible>(e2);
+    world.addComponent<ecs::Velocity>(
+        e2, ecs::Velocity(ecs::Vec3{150.0f, 150.0f, 0.0f}));  // Moving diagonal
 
-        // Allocate some data
-        auto* data = arena.allocArray<f32>(1000);
-        LOG_INFO("  Allocated 1000 floats, used: {} bytes", arena.used());
+    // 5. Game Loop
+    LOG_INFO("Entering game loop...");
 
-        arena.reset();
-        LOG_INFO("  After reset: {} bytes used", arena.used());
-    }
+    auto lastTime = std::chrono::high_resolution_clock::now();
+    bool running = true;
 
-    // Run simulation loop
-    LOG_INFO("");
-    LOG_INFO("Running simulation (100 frames)...");
+    while (running && !window->shouldClose()) {
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        f32 dt = std::chrono::duration<f32>(currentTime - lastTime).count();
+        lastTime = currentTime;
 
-    constexpr int FRAME_COUNT = 100;
-    constexpr f64 TARGET_DT = 1.0 / 60.0;  // 60 FPS target
+        // Poll events
+        window->pollEvents();
 
-    for (int frame = 0; frame < FRAME_COUNT; ++frame) {
-        beginFrame();
-        
-        runFrame(TARGET_DT);
-        
-        endFrame();
+        // Simple update logic
+        auto* t_ptr = world.getComponent<ecs::Transform>(e2);
+        auto* v_ptr = world.getComponent<ecs::Velocity>(e2);
 
-        // Print progress every 25 frames
-        if ((frame + 1) % 25 == 0) {
-            auto stats = getProfilerStats();
-            LOG_INFO("  Frame {}: avg={:.2f}ms, fps={:.1f}",
-                     frame + 1,
-                     std::chrono::duration<f64, std::milli>(stats.avgFrameTime).count(),
-                     stats.avgFps);
+        if (t_ptr && v_ptr) {
+            auto& pos = t_ptr->position;
+            auto& vel = v_ptr->linear;
+
+            pos.x += vel.x * dt;
+            pos.y += vel.y * dt;
+
+            // Bounce
+            if (pos.x < 0 || pos.x > 800)
+                vel.x *= -1.0f;
+            if (pos.y < 0 || pos.y > 600)
+                vel.y *= -1.0f;
         }
+
+        // ECS Update (Render)
+        world.update(dt);
+
+        // Cap FPS ~60
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 
-    // Print final statistics
-    LOG_INFO("");
-    LOG_INFO("=== Final Statistics ===");
-    
-    auto stats = getProfilerStats();
-    LOG_INFO("Frames: {}", stats.sampleCount);
-    LOG_INFO("Avg Frame Time: {:.3f} ms", 
-             std::chrono::duration<f64, std::milli>(stats.avgFrameTime).count());
-    LOG_INFO("Min Frame Time: {:.3f} ms",
-             std::chrono::duration<f64, std::milli>(stats.minFrameTime).count());
-    LOG_INFO("Max Frame Time: {:.3f} ms",
-             std::chrono::duration<f64, std::milli>(stats.maxFrameTime).count());
-    LOG_INFO("P95 Frame Time: {:.3f} ms",
-             std::chrono::duration<f64, std::milli>(stats.p95FrameTime).count());
-    LOG_INFO("P99 Frame Time: {:.3f} ms",
-             std::chrono::duration<f64, std::milli>(stats.p99FrameTime).count());
-    LOG_INFO("");
-    LOG_INFO("Avg FPS: {:.1f}", stats.avgFps);
-    LOG_INFO("Min FPS: {:.1f}", stats.minFps);
-    LOG_INFO("Max FPS: {:.1f}", stats.maxFps);
-    LOG_INFO("");
-    LOG_INFO("Spikes (>{:.1f}ms): {}", 
-             std::chrono::duration<f64, std::milli>(stats.spikeThreshold).count(),
-             stats.spikeCount);
-
-    // Memory statistics
-    LOG_INFO("");
-    LOG_INFO("=== Memory Statistics ===");
-    auto memStats = getTotalMemoryStats();
-    LOG_INFO("Current: {} bytes", memStats.currentBytes);
-    LOG_INFO("Peak: {} bytes", memStats.peakBytes);
-    LOG_INFO("Total Allocations: {}", memStats.totalAllocations);
-    LOG_INFO("Total Deallocations: {}", memStats.totalDeallocations);
-
-    // Cleanup
-    LOG_INFO("");
-    LOG_INFO("Shutting down...");
-    shutdownProfiler();
+    // Shutdown
+    world.shutdown();
     shutdownLogger();
 
     return 0;

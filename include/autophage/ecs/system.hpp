@@ -56,6 +56,10 @@ public:
 
 /// @brief Base class for systems with common functionality
 /// @tparam Derived CRTP derived class
+/// @brief Base class for systems with common functionality
+/// @tparam Derived CRTP derived class
+/// @brief Base class for systems with common functionality
+/// @tparam Derived CRTP derived class
 template <typename Derived> class System : public ISystem
 {
 public:
@@ -108,9 +112,11 @@ enum class SystemVariant : u8
 }
 
 /// @brief System with multiple implementations that can be hot-swapped
-class IVariantSystem : public ISystem
+class IVariantSystem
 {
 public:
+    virtual ~IVariantSystem() = default;
+
     /// @brief Get available variants
     [[nodiscard]] virtual std::vector<SystemVariant> availableVariants() const = 0;
 

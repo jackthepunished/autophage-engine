@@ -5,6 +5,7 @@
 add_library(autophage_ecs STATIC
     ecs.cpp
     systems/render_system.cpp
+    systems/physics_system.cpp
 )
 
 target_link_libraries(autophage_ecs
@@ -12,6 +13,11 @@ target_link_libraries(autophage_ecs
         autophage_common
         autophage_core
         autophage_window
+)
+
+target_compile_options(autophage_ecs
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4250>
 )
 
 target_include_directories(autophage_ecs

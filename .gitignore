@@ -34,3 +34,8 @@ Thumbs.db
 # AI/Agent
 .opencode/
 .gemini/
+
+# Logs
+*.log
+*_log.txt
+build_log*.txt

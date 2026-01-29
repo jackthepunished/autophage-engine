@@ -3,11 +3,11 @@
 /// @file systems.hpp
 /// @brief Common ECS systems with scalar and SIMD implementations
 
-#include <autophage/core/types.hpp>
 #include <autophage/core/platform.hpp>
+#include <autophage/core/types.hpp>
+#include <autophage/ecs/components.hpp>
 #include <autophage/ecs/system.hpp>
 #include <autophage/ecs/world.hpp>
-#include <autophage/ecs/components.hpp>
 
 // SIMD headers
 #if defined(AUTOPHAGE_SIMD_AVX2) || defined(AUTOPHAGE_SIMD_AVX)
@@ -26,11 +26,13 @@ namespace autophage::ecs {
 // =============================================================================
 
 /// @brief Scalar implementation of velocity integration
-class VelocitySystemScalar : public System<VelocitySystemScalar> {
+class VelocitySystemScalar : public System<VelocitySystemScalar>
+{
 public:
     VelocitySystemScalar() : System("VelocitySystem::Scalar") {}
 
-    void update(World& world, f32 dt) override {
+    void update(World& world, f32 dt) override
+    {
         auto q = world.query<Transform, Velocity>();
         q.forEach([dt](Entity /*entity*/, Transform& transform, Velocity& velocity) {
             // Linear velocity integration: position += velocity * dt
@@ -42,32 +44,34 @@ public:
 };
 
 /// @brief SIMD implementation of velocity integration (processes 4 entities at a time)
-class VelocitySystemSIMD : public System<VelocitySystemSIMD> {
+class VelocitySystemSIMD : public System<VelocitySystemSIMD>
+{
 public:
     VelocitySystemSIMD() : System("VelocitySystem::SIMD") {}
 
-    void update(World& world, f32 dt) override {
+    void update(World& world, f32 dt) override
+    {
         // For now, fall back to scalar - full SoA implementation needed for true SIMD
         // This demonstrates the variant pattern; true SIMD requires SoA component storage
-        
-        #if defined(AUTOPHAGE_SIMD_SSE2) || defined(AUTOPHAGE_SIMD_AVX2)
+
+#if defined(AUTOPHAGE_SIMD_SSE2) || defined(AUTOPHAGE_SIMD_AVX2)
         // Single-entity SIMD (still faster due to vectorized operations)
         __m128 dtVec = _mm_set1_ps(dt);
-        
+
         auto q = world.query<Transform, Velocity>();
         q.forEach([dtVec](Entity /*entity*/, Transform& transform, Velocity& velocity) {
             // Load position and velocity
             __m128 pos = _mm_loadu_ps(&transform.position.x);
             __m128 vel = _mm_loadu_ps(&velocity.linear.x);
-            
+
             // pos += vel * dt
             __m128 delta = _mm_mul_ps(vel, dtVec);
             pos = _mm_add_ps(pos, delta);
-            
+
             // Store result
             _mm_storeu_ps(&transform.position.x, pos);
         });
-        #else
+#else
         // Fallback to scalar
         auto q = world.query<Transform, Velocity>();
         q.forEach([dt](Entity /*entity*/, Transform& transform, Velocity& velocity) {
@@ -75,36 +79,26 @@ public:
             transform.position.y += velocity.linear.y * dt;
             transform.position.z += velocity.linear.z * dt;
         });
-        #endif
+#endif
     }
 };
 
 /// @brief Velocity system with hot-swappable implementations
-class VelocitySystem : public IVariantSystem {
+class VelocitySystem : public System<VelocitySystem>, public IVariantSystem
+{
 public:
-    VelocitySystem() : currentVariant_(SystemVariant::Scalar) {
-        // Check SIMD support at runtime and default to best available
-        #if defined(AUTOPHAGE_SIMD_AVX2) || defined(AUTOPHAGE_SIMD_SSE2)
+    VelocitySystem() : System("VelocitySystem"), currentVariant_(SystemVariant::Scalar)
+    {
+// Check SIMD support at runtime and default to best available
+#if defined(AUTOPHAGE_SIMD_AVX2) || defined(AUTOPHAGE_SIMD_SSE2)
         currentVariant_ = SystemVariant::SIMD;
-        #endif
+#endif
     }
 
-    [[nodiscard]] TypeId systemId() const noexcept override {
-        return typeId<VelocitySystem>();
-    }
-
-    [[nodiscard]] const char* name() const noexcept override {
-        return "VelocitySystem";
-    }
-
-    void init([[maybe_unused]] World& world) override {}
-    void shutdown([[maybe_unused]] World& world) override {}
-
-    [[nodiscard]] bool isEnabled() const noexcept override { return enabled_; }
-    void setEnabled(bool enabled) override { enabled_ = enabled; }
-
-    void update(World& world, f32 dt) override {
-        if (!enabled_) return;
+    void update(World& world, f32 dt) override
+    {
+        if (!enabled_)
+            return;
 
         switch (currentVariant_) {
             case SystemVariant::SIMD:
@@ -119,19 +113,19 @@ public:
         }
     }
 
-    [[nodiscard]] std::vector<SystemVariant> availableVariants() const override {
+    [[nodiscard]] std::vector<SystemVariant> availableVariants() const override
+    {
         std::vector<SystemVariant> variants = {SystemVariant::Scalar};
-        #if defined(AUTOPHAGE_SIMD_AVX2) || defined(AUTOPHAGE_SIMD_SSE2)
+#if defined(AUTOPHAGE_SIMD_AVX2) || defined(AUTOPHAGE_SIMD_SSE2)
         variants.push_back(SystemVariant::SIMD);
-        #endif
+#endif
         return variants;
     }
 
-    [[nodiscard]] SystemVariant currentVariant() const noexcept override {
-        return currentVariant_;
-    }
+    [[nodiscard]] SystemVariant currentVariant() const noexcept override { return currentVariant_; }
 
-    bool switchVariant(SystemVariant variant) override {
+    bool switchVariant(SystemVariant variant) override
+    {
         auto available = availableVariants();
         for (auto v : available) {
             if (v == variant) {
@@ -143,7 +137,8 @@ public:
     }
 
 private:
-    void updateScalar(World& world, f32 dt) {
+    void updateScalar(World& world, f32 dt)
+    {
         auto q = world.query<Transform, Velocity>();
         q.forEach([dt](Entity /*entity*/, Transform& transform, Velocity& velocity) {
             transform.position.x += velocity.linear.x * dt;
@@ -152,10 +147,11 @@ private:
         });
     }
 
-    void updateSIMD(World& world, f32 dt) {
-        #if defined(AUTOPHAGE_SIMD_SSE2) || defined(AUTOPHAGE_SIMD_AVX2)
+    void updateSIMD(World& world, f32 dt)
+    {
+#if defined(AUTOPHAGE_SIMD_SSE2) || defined(AUTOPHAGE_SIMD_AVX2)
         __m128 dtVec = _mm_set1_ps(dt);
-        
+
         auto q = world.query<Transform, Velocity>();
         q.forEach([dtVec](Entity /*entity*/, Transform& transform, Velocity& velocity) {
             __m128 pos = _mm_loadu_ps(&transform.position.x);
@@ -163,9 +159,9 @@ private:
             pos = _mm_add_ps(pos, _mm_mul_ps(vel, dtVec));
             _mm_storeu_ps(&transform.position.x, pos);
         });
-        #else
+#else
         updateScalar(world, dt);
-        #endif
+#endif
     }
 
     SystemVariant currentVariant_;
@@ -177,11 +173,13 @@ private:
 // =============================================================================
 
 /// @brief Applies gravity to entities with Mass and Velocity
-class GravitySystem : public System<GravitySystem> {
+class GravitySystem : public System<GravitySystem>
+{
 public:
     GravitySystem() : System("GravitySystem") {}
 
-    void update(World& world, f32 dt) override {
+    void update(World& world, f32 dt) override
+    {
         // Global gravity for entities without custom Gravity component
         constexpr Vec3 defaultGravity{0, -9.81f, 0};
 
@@ -204,11 +202,13 @@ public:
 // =============================================================================
 
 /// @brief Applies acceleration to velocity
-class AccelerationSystem : public System<AccelerationSystem> {
+class AccelerationSystem : public System<AccelerationSystem>
+{
 public:
     AccelerationSystem() : System("AccelerationSystem") {}
 
-    void update(World& world, f32 dt) override {
+    void update(World& world, f32 dt) override
+    {
         auto q = world.query<Velocity, Acceleration>();
         q.forEach([dt](Entity /*entity*/, Velocity& velocity, Acceleration& accel) {
             velocity.linear.x += accel.value.x * dt;
@@ -223,14 +223,16 @@ public:
 // =============================================================================
 
 /// @brief Updates transforms based on parent-child hierarchy
-class HierarchySystem : public System<HierarchySystem> {
+class HierarchySystem : public System<HierarchySystem>
+{
 public:
     HierarchySystem() : System("HierarchySystem") {}
 
-    void update(World& world, [[maybe_unused]] f32 dt) override {
+    void update(World& world, [[maybe_unused]] f32 dt) override
+    {
         // Process entities by depth level (root first, then children)
         // This is a simplified version - a full implementation would sort by depth
-        
+
         auto q = world.query<Transform, Hierarchy>();
         q.forEach([&world](Entity entity, Transform& transform, Hierarchy& hierarchy) {
             if (hierarchy.hasParent()) {
@@ -254,28 +256,26 @@ public:
 // =============================================================================
 
 /// @brief Updates AABB based on transform (simplified)
-class BoundsSystem : public System<BoundsSystem> {
+class BoundsSystem : public System<BoundsSystem>
+{
 public:
     BoundsSystem() : System("BoundsSystem") {}
 
-    void update(World& world, [[maybe_unused]] f32 dt) override {
+    void update(World& world, [[maybe_unused]] f32 dt) override
+    {
         auto q = world.query<Transform, AABB>();
         q.forEach([](Entity /*entity*/, Transform& transform, AABB& aabb) {
             // Simple offset - real implementation would transform all 8 corners
             Vec3 center = aabb.center();
             Vec3 extents = aabb.extents();
-            
+
             // Translate bounds by position
-            aabb.min = Vec3{
-                transform.position.x + center.x - extents.x,
-                transform.position.y + center.y - extents.y,
-                transform.position.z + center.z - extents.z
-            };
-            aabb.max = Vec3{
-                transform.position.x + center.x + extents.x,
-                transform.position.y + center.y + extents.y,
-                transform.position.z + center.z + extents.z
-            };
+            aabb.min = Vec3{transform.position.x + center.x - extents.x,
+                            transform.position.y + center.y - extents.y,
+                            transform.position.z + center.z - extents.z};
+            aabb.max = Vec3{transform.position.x + center.x + extents.x,
+                            transform.position.y + center.y + extents.y,
+                            transform.position.z + center.z + extents.z};
         });
     }
 };
@@ -285,14 +285,16 @@ public:
 // =============================================================================
 
 /// @brief Removes entities marked with Destroyed tag
-class CleanupSystem : public System<CleanupSystem> {
+class CleanupSystem : public System<CleanupSystem>
+{
 public:
     CleanupSystem() : System("CleanupSystem") {}
 
-    void update(World& world, [[maybe_unused]] f32 dt) override {
+    void update(World& world, [[maybe_unused]] f32 dt) override
+    {
         // Collect entities to destroy (can't modify while iterating)
         std::vector<Entity> toDestroy;
-        
+
         // Check for Destroyed tag
         auto& destroyedArray = world.componentRegistry().getArray<Destroyed>();
         destroyedArray.forEach([&toDestroy](Entity entity, [[maybe_unused]] Destroyed& /*tag*/) {

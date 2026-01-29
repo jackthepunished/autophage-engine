@@ -5,6 +5,7 @@ add_library(autophage_window
 target_link_libraries(autophage_window
     PUBLIC
         autophage_core
+    PRIVATE
         SDL2::SDL2
 )
 

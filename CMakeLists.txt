@@ -167,10 +167,10 @@ add_subdirectory(src/profiler)
 add_subdirectory(src/ecs)
 
 # Analyzer library (Phase 2)
-# add_subdirectory(src/analyzer)
+add_subdirectory(src/analyzer)
 
 # Optimizer library (Phase 2)
-# add_subdirectory(src/optimizer)
+add_subdirectory(src/optimizer)
 
 # Rewriter library (Phase 3)
 # add_subdirectory(src/rewriter)
@@ -185,6 +185,8 @@ target_link_libraries(autophage INTERFACE
     autophage_window
     autophage_profiler
     autophage_ecs
+    autophage_analyzer
+    autophage_optimizer
 )
 
 # ==============================================================================
