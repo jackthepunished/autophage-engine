@@ -21,7 +21,6 @@ target_include_directories(autophage_analyzer
 
 # Installation
 install(TARGETS autophage_analyzer
-    EXPORT autophage-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )

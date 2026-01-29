@@ -48,7 +48,6 @@ target_precompile_headers(autophage_core
 
 # Installation
 install(TARGETS autophage_core
-    EXPORT autophage-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )

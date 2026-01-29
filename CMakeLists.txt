@@ -173,7 +173,7 @@ add_subdirectory(src/analyzer)
 add_subdirectory(src/optimizer)
 
 # Rewriter library (Phase 3)
-# add_subdirectory(src/rewriter)
+add_subdirectory(src/rewriter)
 
 # ==============================================================================
 # Main Engine Library
@@ -187,6 +187,7 @@ target_link_libraries(autophage INTERFACE
     autophage_ecs
     autophage_analyzer
     autophage_optimizer
+    autophage_rewriter
 )
 
 # ==============================================================================
@@ -224,7 +225,6 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 install(TARGETS autophage autophage_common autophage_warnings autophage_sanitizers
-    EXPORT autophage-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -235,11 +235,11 @@ install(DIRECTORY include/autophage
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(EXPORT autophage-targets
-    FILE autophage-targets.cmake
-    NAMESPACE autophage::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/autophage
-)
+# install(EXPORT autophage-targets
+#     FILE autophage-targets.cmake
+#     NAMESPACE autophage::
+#     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/autophage
+# )
 
 # ==============================================================================
 # Summary

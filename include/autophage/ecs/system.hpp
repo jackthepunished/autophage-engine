@@ -157,6 +157,38 @@ public:
         return nullptr;
     }
 
+    /// @brief Replace an existing system with a new one
+    /// @tparam T The type of the system to replace
+    /// @tparam NewT The type of the new system implementation
+    /// @param args Arguments for the new system constructor
+    /// @return Reference to the new system
+    template <typename T, typename NewT, typename... Args>
+    NewT& replaceSystem(World& world, Args&&... args)
+    {
+        TypeId id = typeId<T>();
+        for (auto it = systems_.begin(); it != systems_.end(); ++it) {
+            if ((*it)->systemId() == id) {
+                // Shutdown old system
+                (*it)->shutdown(world);
+
+                // Create new system
+                auto newSystem = std::make_unique<NewT>(std::forward<Args>(args)...);
+                NewT& ref = *newSystem;
+
+                // Replace in registry
+                *it = std::move(newSystem);
+
+                // Initialize new system
+                ref.init(world);
+
+                return ref;
+            }
+        }
+
+        // If not found, just register as new
+        return registerSystem<NewT>(std::forward<Args>(args)...);
+    }
+
     /// @brief Initialize all systems
     void initAll(World& world)
     {

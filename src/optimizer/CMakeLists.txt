@@ -16,7 +16,6 @@ target_include_directories(autophage_optimizer
 )
 
 install(TARGETS autophage_optimizer
-    EXPORT autophage-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )

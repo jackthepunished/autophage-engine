@@ -20,7 +20,6 @@ target_include_directories(autophage_profiler
 
 # Installation
 install(TARGETS autophage_profiler
-    EXPORT autophage-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )

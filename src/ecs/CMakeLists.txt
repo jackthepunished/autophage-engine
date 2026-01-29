@@ -42,7 +42,6 @@ set_target_properties(autophage_ecs PROPERTIES
 
 # Installation
 install(TARGETS autophage_ecs
-    EXPORT autophage-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
