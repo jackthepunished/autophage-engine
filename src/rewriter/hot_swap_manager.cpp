@@ -1,6 +1,6 @@
 #include <autophage/core/logger.hpp>
 #include <autophage/rewriter/hot_swap_manager.hpp>
-
+#include <autophage/rewriter/rewriter.hpp>
 
 namespace autophage::rewriter {
 
@@ -19,16 +19,27 @@ bool HotSwapManager::hotSwapFromSource(const std::string& systemName, const std:
         return false;
     }
 
-    // This is where we would:
-    // 1. Compile the source using compiler_
-    // 2. Load the resulting shared object/pointer
-    // 3. Cast it to a System factory or similar
-    // 4. Call world_.replaceSystem with the new instance
+    // 1. Map necessary engine symbols (World, types, etc.)
+    compiler_->addSymbol("world", &world_);
 
-    LOG_WARN("JIT-based hot-swapping is not yet fully implemented.");
-    (void)source;
+    // 2. Compile the source
+    void* funcPtr = compiler_->compile(source, "updateSystem");
+    if (!funcPtr) {
+        LOG_ERROR("Failed to compile system source: {}", compiler_->getLastError());
+        return false;
+    }
 
-    return false;
+    // 3. Transform the function pointer to a JITSystem UpdateFunc
+    auto updateFunc = reinterpret_cast<JITSystem::UpdateFunc>(funcPtr);
+
+    // 4. Replace the system in the world
+    // We replace the ISystem but pinpoint it via the systemName if we had a registry lookup by
+    // name. For now, we assume we are replacing the specific system by type if it was registered.
+    world_.replaceSystem<ecs::ISystem, JITSystem>(updateFunc);
+
+    LOG_INFO("Successfully hot-swapped system '{}' with JIT'd implementation.", systemName);
+
+    return true;
 }
 
 }  // namespace autophage::rewriter

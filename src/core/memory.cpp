@@ -137,7 +137,9 @@ LinearAllocator::LinearAllocator(usize capacity, MemoryTag tag) : capacity_(capa
 
 LinearAllocator::~LinearAllocator()
 {
-    if (memory_) {}
+    if (memory_) {
+        taggedAlignedFree(memory_, tag_);
+    }
 }
 
 LinearAllocator::LinearAllocator(LinearAllocator&& other) noexcept
@@ -181,9 +183,10 @@ void* LinearAllocator::alloc(usize size, usize alignment) noexcept
     return ptr;
 }
 
-void LinearAllocator::reset() noexcept
+void LinearAllocator::reset(usize offset) noexcept
 {
-    offset_ = 0;
+    AUTOPHAGE_ASSERT(offset <= capacity_, "Offset out of bounds");
+    offset_ = offset;
 }
 
 }  // namespace autophage

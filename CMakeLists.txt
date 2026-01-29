@@ -23,7 +23,7 @@ option(AUTOPHAGE_BUILD_EXAMPLES "Build example applications" ON)
 option(AUTOPHAGE_BUILD_DOCS "Build documentation" OFF)
 option(AUTOPHAGE_ENABLE_ASAN "Enable Address Sanitizer" OFF)
 option(AUTOPHAGE_ENABLE_UBSAN "Enable Undefined Behavior Sanitizer" OFF)
-option(AUTOPHAGE_USE_LLVM_JIT "Enable LLVM JIT support" OFF)
+option(AUTOPHAGE_USE_LLVM_JIT "Enable LLVM JIT support" ON)
 
 # ==============================================================================
 # Global Configuration

@@ -6,7 +6,6 @@
 #include <memory>
 #include <string>
 
-
 namespace autophage::rewriter {
 
 /// @brief Manages the hot-swapping of ECS systems
@@ -31,6 +30,24 @@ public:
     bool hotSwapFromSource(const std::string& systemName, const std::string& source);
 
 private:
+    /// @brief A system implementation that delegates to JIT'd code
+    class JITSystem : public ecs::System<JITSystem>
+    {
+    public:
+        using UpdateFunc = void (*)(ecs::World&, f32);
+
+        explicit JITSystem(UpdateFunc func) : System("JITSystem"), updateFunc_(func) {}
+
+        void update(ecs::World& world, f32 dt) override
+        {
+            if (updateFunc_)
+                updateFunc_(world, dt);
+        }
+
+    private:
+        UpdateFunc updateFunc_;
+    };
+
     ecs::World& world_;
     std::unique_ptr<JITCompiler> compiler_;
 };

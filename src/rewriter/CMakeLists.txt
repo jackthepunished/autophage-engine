@@ -3,6 +3,7 @@
 set(REWRITER_SOURCES
     jit_compiler.cpp
     hot_swap_manager.cpp
+    rewriter.cpp
 )
 
 add_library(autophage_rewriter STATIC ${REWRITER_SOURCES})

@@ -165,7 +165,6 @@ private:
     }
 
     SystemVariant currentVariant_;
-    bool enabled_ = true;
 };
 
 // =============================================================================
@@ -288,24 +287,27 @@ public:
 class CleanupSystem : public System<CleanupSystem>
 {
 public:
-    CleanupSystem() : System("CleanupSystem") {}
+    CleanupSystem() : System("CleanupSystem") { toDestroy_.reserve(100); }
 
     void update(World& world, [[maybe_unused]] f32 dt) override
     {
         // Collect entities to destroy (can't modify while iterating)
-        std::vector<Entity> toDestroy;
+        toDestroy_.clear();
 
         // Check for Destroyed tag
         auto& destroyedArray = world.componentRegistry().getArray<Destroyed>();
-        destroyedArray.forEach([&toDestroy](Entity entity, [[maybe_unused]] Destroyed& /*tag*/) {
-            toDestroy.push_back(entity);
+        destroyedArray.forEach([this](Entity entity, [[maybe_unused]] Destroyed& /*tag*/) {
+            toDestroy_.push_back(entity);
         });
 
         // Destroy collected entities
-        for (Entity entity : toDestroy) {
+        for (Entity entity : toDestroy_) {
             world.destroyEntity(entity);
         }
     }
+
+private:
+    std::vector<Entity> toDestroy_;
 };
 
 }  // namespace autophage::ecs

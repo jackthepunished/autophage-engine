@@ -10,42 +10,12 @@
 namespace autophage::ecs {
 
 // =============================================================================
-// Entity - Generational Index
-// =============================================================================
-
-/// @brief Entity identifier with generational index
-/// The generation prevents ABA problems when entities are recycled
-struct Entity {
-    u32 index = 0;
-    u32 generation = 0;
-
-    [[nodiscard]] constexpr bool isValid() const noexcept {
-        return generation != 0;
-    }
-
-    [[nodiscard]] constexpr bool operator==(const Entity& other) const noexcept {
-        return index == other.index && generation == other.generation;
-    }
-
-    [[nodiscard]] constexpr bool operator!=(const Entity& other) const noexcept {
-        return !(*this == other);
-    }
-
-    [[nodiscard]] constexpr bool operator<(const Entity& other) const noexcept {
-        if (index != other.index) return index < other.index;
-        return generation < other.generation;
-    }
-};
-
-/// @brief Invalid entity constant
-inline constexpr Entity INVALID_ENTITY{0, 0};
-
-// =============================================================================
 // Entity Manager
 // =============================================================================
 
 /// @brief Manages entity creation, destruction, and recycling
-class EntityManager {
+class EntityManager
+{
 public:
     EntityManager() = default;
     ~EntityManager() = default;
@@ -58,7 +28,8 @@ public:
 
     /// @brief Create a new entity
     /// @return The newly created entity
-    [[nodiscard]] Entity create() {
+    [[nodiscard]] Entity create()
+    {
         if (!freeList_.empty()) {
             // Recycle an old entity slot
             u32 index = freeList_.back();
@@ -81,7 +52,8 @@ public:
     /// @brief Destroy an entity
     /// @param entity The entity to destroy
     /// @return true if the entity was destroyed, false if it was invalid
-    bool destroy(Entity entity) {
+    bool destroy(Entity entity)
+    {
         if (!isAlive(entity)) {
             return false;
         }
@@ -95,7 +67,8 @@ public:
     /// @brief Check if an entity is alive
     /// @param entity The entity to check
     /// @return true if the entity exists and is alive
-    [[nodiscard]] bool isAlive(Entity entity) const noexcept {
+    [[nodiscard]] bool isAlive(Entity entity) const noexcept
+    {
         if (entity.index >= generations_.size()) {
             return false;
         }
@@ -112,13 +85,15 @@ public:
     [[nodiscard]] usize recycledCount() const noexcept { return freeList_.size(); }
 
     /// @brief Reserve capacity for entities
-    void reserve(usize count) {
+    void reserve(usize count)
+    {
         generations_.reserve(count);
         alive_.reserve(count);
     }
 
     /// @brief Clear all entities (resets the manager)
-    void clear() {
+    void clear()
+    {
         generations_.clear();
         alive_.clear();
         freeList_.clear();
@@ -126,8 +101,8 @@ public:
     }
 
     /// @brief Iterate over all alive entities
-    template <typename Func>
-    void forEach(Func&& func) const {
+    template <typename Func> void forEach(Func&& func) const
+    {
         for (usize i = 0; i < alive_.size(); ++i) {
             if (alive_[i]) {
                 func(Entity{static_cast<u32>(i), generations_[i]});
@@ -145,11 +120,10 @@ private:
 }  // namespace autophage::ecs
 
 // Hash support for Entity
-template <>
-struct std::hash<autophage::ecs::Entity> {
-    [[nodiscard]] size_t operator()(const autophage::ecs::Entity& e) const noexcept {
-        return std::hash<uint64_t>{}(
-            (static_cast<uint64_t>(e.index) << 32) | e.generation
-        );
+template <> struct std::hash<autophage::ecs::Entity>
+{
+    [[nodiscard]] size_t operator()(const autophage::ecs::Entity& e) const noexcept
+    {
+        return std::hash<uint64_t>{}((static_cast<uint64_t>(e.index) << 32) | e.generation);
     }
 };

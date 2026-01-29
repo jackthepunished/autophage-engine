@@ -1,23 +1,25 @@
 /// @file test_system.cpp
 /// @brief Tests for ECS Systems
 
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/catch_approx.hpp>
-
-#include <autophage/ecs/world.hpp>
-#include <autophage/ecs/system.hpp>
 #include <autophage/ecs/components.hpp>
+#include <autophage/ecs/system.hpp>
 #include <autophage/ecs/systems.hpp>
+#include <autophage/ecs/world.hpp>
+
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace autophage;
 using namespace autophage::ecs;
 
 // Simple test system
-class CounterSystem : public System<CounterSystem> {
+class CounterSystem : public System<CounterSystem>
+{
 public:
     CounterSystem() : System("CounterSystem") {}
 
-    void update(World& world, f32 dt) override {
+    void update(World& world, f32 dt) override
+    {
         updateCount++;
         lastDt = dt;
         lastEntityCount = world.entityCount();
@@ -29,27 +31,30 @@ public:
 };
 
 // System that modifies components
-class PositionModifierSystem : public System<PositionModifierSystem> {
+class PositionModifierSystem : public System<PositionModifierSystem>
+{
 public:
     PositionModifierSystem() : System("PositionModifierSystem") {}
 
-    void update(World& world, f32 dt) override {
+    void update(World& world, f32 dt) override
+    {
         auto q = world.query<Transform>();
-        q.forEach([dt](Entity /*e*/, Transform& t) {
-            t.position.x += 1.0f * dt;
-        });
+        q.forEach([dt](Entity /*e*/, Transform& t) { t.position.x += 1.0f * dt; });
     }
 };
 
-TEST_CASE("System base class", "[ecs][system]") {
+TEST_CASE("System base class", "[ecs][system]")
+{
     CounterSystem system;
 
-    SECTION("System properties") {
+    SECTION("System properties")
+    {
         REQUIRE(system.name() == std::string("CounterSystem"));
         REQUIRE(system.systemId() == typeId<CounterSystem>());
     }
 
-    SECTION("Enable/disable") {
+    SECTION("Enable/disable")
+    {
         REQUIRE(system.isEnabled());
 
         system.setEnabled(false);
@@ -60,11 +65,13 @@ TEST_CASE("System base class", "[ecs][system]") {
     }
 }
 
-TEST_CASE("SystemRegistry", "[ecs][system]") {
+TEST_CASE("SystemRegistry", "[ecs][system]")
+{
     SystemRegistry registry;
     World world;
 
-    SECTION("Register and get system") {
+    SECTION("Register and get system")
+    {
         CounterSystem& counter = registry.registerSystem<CounterSystem>();
 
         REQUIRE(registry.count() == 1);
@@ -73,11 +80,13 @@ TEST_CASE("SystemRegistry", "[ecs][system]") {
         REQUIRE(retrieved == &counter);
     }
 
-    SECTION("Get non-existent system returns nullptr") {
+    SECTION("Get non-existent system returns nullptr")
+    {
         REQUIRE(registry.getSystem<CounterSystem>() == nullptr);
     }
 
-    SECTION("Multiple systems") {
+    SECTION("Multiple systems")
+    {
         registry.registerSystem<CounterSystem>();
         registry.registerSystem<PositionModifierSystem>();
 
@@ -86,13 +95,15 @@ TEST_CASE("SystemRegistry", "[ecs][system]") {
         REQUIRE(registry.getSystem<PositionModifierSystem>() != nullptr);
     }
 
-    SECTION("initAll") {
+    SECTION("initAll")
+    {
         registry.registerSystem<CounterSystem>();
         registry.initAll(world);
         // CounterSystem has empty init, just verify no crash
     }
 
-    SECTION("updateAll") {
+    SECTION("updateAll")
+    {
         CounterSystem& counter = registry.registerSystem<CounterSystem>();
 
         registry.updateAll(world, 0.016f);
@@ -104,7 +115,8 @@ TEST_CASE("SystemRegistry", "[ecs][system]") {
         REQUIRE(counter.lastDt == Catch::Approx(0.032f));
     }
 
-    SECTION("updateAll respects enabled flag") {
+    SECTION("updateAll respects enabled flag")
+    {
         CounterSystem& counter = registry.registerSystem<CounterSystem>();
         counter.setEnabled(false);
 
@@ -112,29 +124,34 @@ TEST_CASE("SystemRegistry", "[ecs][system]") {
         REQUIRE(counter.updateCount == 0);
     }
 
-    SECTION("shutdownAll") {
+    SECTION("shutdownAll")
+    {
         registry.registerSystem<CounterSystem>();
         registry.shutdownAll(world);
         // Just verify no crash
     }
 
-    SECTION("clear") {
+    SECTION("clear")
+    {
         registry.registerSystem<CounterSystem>();
         registry.clear();
         REQUIRE(registry.count() == 0);
     }
 }
 
-TEST_CASE("World with systems", "[ecs][system]") {
+TEST_CASE("World with systems", "[ecs][system]")
+{
     World world;
 
-    SECTION("Register system via world") {
+    SECTION("Register system via world")
+    {
         PositionModifierSystem& system = world.registerSystem<PositionModifierSystem>();
 
         REQUIRE(world.getSystem<PositionModifierSystem>() == &system);
     }
 
-    SECTION("System modifies entities") {
+    SECTION("System modifies entities")
+    {
         world.registerSystem<PositionModifierSystem>();
 
         Entity e = world.createEntity();
@@ -149,7 +166,8 @@ TEST_CASE("World with systems", "[ecs][system]") {
         REQUIRE(t->position.x == Catch::Approx(1.5f));
     }
 
-    SECTION("World init/update/shutdown lifecycle") {
+    SECTION("World init/update/shutdown lifecycle")
+    {
         CounterSystem& counter = world.registerSystem<CounterSystem>();
 
         world.init();
@@ -163,8 +181,10 @@ TEST_CASE("World with systems", "[ecs][system]") {
     }
 }
 
-TEST_CASE("SystemVariant enum", "[ecs][system]") {
-    SECTION("toString") {
+TEST_CASE("SystemVariant enum", "[ecs][system]")
+{
+    SECTION("toString")
+    {
         REQUIRE(toString(SystemVariant::Scalar) == std::string("Scalar"));
         REQUIRE(toString(SystemVariant::SIMD) == std::string("SIMD"));
         REQUIRE(toString(SystemVariant::GPU) == std::string("GPU"));
@@ -172,10 +192,12 @@ TEST_CASE("SystemVariant enum", "[ecs][system]") {
     }
 }
 
-TEST_CASE("VelocitySystem", "[ecs][system]") {
+TEST_CASE("VelocitySystem", "[ecs][system]")
+{
     World world;
 
-    SECTION("Scalar variant") {
+    SECTION("Scalar variant")
+    {
         VelocitySystemScalar& system = world.registerSystem<VelocitySystemScalar>();
 
         Entity e = world.createEntity();
@@ -190,7 +212,8 @@ TEST_CASE("VelocitySystem", "[ecs][system]") {
         REQUIRE(t->position.z == Catch::Approx(3.0f));
     }
 
-    SECTION("Variant system hot-swap") {
+    SECTION("Variant system hot-swap")
+    {
         VelocitySystem& system = world.registerSystem<VelocitySystem>();
 
         // Check available variants
@@ -211,8 +234,9 @@ TEST_CASE("VelocitySystem", "[ecs][system]") {
         REQUIRE(t->position.x == Catch::Approx(10.0f));
     }
 
-    #if defined(AUTOPHAGE_SIMD_AVX2) || defined(AUTOPHAGE_SIMD_SSE2)
-    SECTION("SIMD variant") {
+#if defined(AUTOPHAGE_SIMD_AVX2) || defined(AUTOPHAGE_SIMD_SSE2)
+    SECTION("SIMD variant")
+    {
         VelocitySystem& system = world.registerSystem<VelocitySystem>();
 
         REQUIRE(system.switchVariant(SystemVariant::SIMD));
@@ -229,10 +253,11 @@ TEST_CASE("VelocitySystem", "[ecs][system]") {
         REQUIRE(t->position.y == Catch::Approx(2.0f));
         REQUIRE(t->position.z == Catch::Approx(3.0f));
     }
-    #endif
+#endif
 }
 
-TEST_CASE("GravitySystem", "[ecs][system]") {
+TEST_CASE("GravitySystem", "[ecs][system]")
+{
     World world;
     GravitySystem& system = world.registerSystem<GravitySystem>();
 
@@ -240,14 +265,16 @@ TEST_CASE("GravitySystem", "[ecs][system]") {
     world.addComponent<Velocity>(e, Velocity{Vec3{0.0f, 0.0f, 0.0f}});
     world.addComponent<Mass>(e, Mass{1.0f});
 
-    SECTION("Default gravity") {
+    SECTION("Default gravity")
+    {
         system.update(world, 1.0f);
 
         Velocity* v = world.getComponent<Velocity>(e);
         REQUIRE(v->linear.y == Catch::Approx(-9.81f));
     }
 
-    SECTION("Custom gravity") {
+    SECTION("Custom gravity")
+    {
         world.addComponent<Gravity>(e, Gravity{Vec3{0.0f, -5.0f, 0.0f}});
 
         system.update(world, 1.0f);
@@ -257,7 +284,8 @@ TEST_CASE("GravitySystem", "[ecs][system]") {
     }
 }
 
-TEST_CASE("CleanupSystem", "[ecs][system]") {
+TEST_CASE("CleanupSystem", "[ecs][system]")
+{
     World world;
     CleanupSystem& system = world.registerSystem<CleanupSystem>();
 
@@ -280,4 +308,37 @@ TEST_CASE("CleanupSystem", "[ecs][system]") {
     REQUIRE(world.isAlive(e1));
     REQUIRE_FALSE(world.isAlive(e2));
     REQUIRE(world.isAlive(e3));
+}
+
+TEST_CASE("System replacement (Hot-Swap)", "[ecs][system]")
+{
+    World world;
+
+    SECTION("Replace system with same type")
+    {
+        CounterSystem& s1 = world.registerSystem<CounterSystem>();
+        world.update(0.1f);
+        REQUIRE(s1.updateCount == 1);
+
+        // Replace with new instance of same type
+        CounterSystem& s2 = world.replaceSystem<CounterSystem, CounterSystem>();
+        REQUIRE(&s1 != &s2);
+        REQUIRE(s2.updateCount == 0);  // New instance
+
+        world.update(0.1f);
+        REQUIRE(s2.updateCount == 1);
+    }
+
+    SECTION("Replace system with different type")
+    {
+        world.registerSystem<CounterSystem>();
+
+        // Replace CounterSystem with PositionModifierSystem
+        // Note: Casting needs to be correct. replaceSystem returns NewT&.
+        PositionModifierSystem& newSys =
+            world.replaceSystem<CounterSystem, PositionModifierSystem>();
+
+        REQUIRE(world.getSystem<CounterSystem>() == nullptr);
+        REQUIRE(world.getSystem<PositionModifierSystem>() == &newSys);
+    }
 }

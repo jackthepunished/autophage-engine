@@ -1,7 +1,6 @@
 #include <autophage/core/logger.hpp>
 #include <autophage/rewriter/jit_compiler.hpp>
 
-
 namespace autophage::rewriter {
 
 class JITCompiler::Impl
@@ -25,6 +24,24 @@ public:
 
 JITCompiler::JITCompiler() : impl_(std::make_unique<Impl>()) {}
 JITCompiler::~JITCompiler() = default;
+
+void* JITCompiler::compile(const std::string& source, const std::string& functionName)
+{
+    (void)source;
+    (void)functionName;
+    return nullptr;
+}
+
+void JITCompiler::addSymbol(const std::string& name, void* address)
+{
+    (void)name;
+    (void)address;
+}
+
+std::string JITCompiler::getLastError() const
+{
+    return "";
+}
 
 bool JITCompiler::isAvailable() const noexcept
 {

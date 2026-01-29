@@ -71,14 +71,13 @@ public:
     /// @brief Get a component from an entity (const)
     template <Component T> [[nodiscard]] const T* getComponent(Entity entity) const
     {
-        // const_cast is safe here because we return const T*
-        return const_cast<World*>(this)->components_.getArray<T>().get(entity);
+        return components_.getArray<T>().get(entity);
     }
 
     /// @brief Check if an entity has a component
     template <Component T> [[nodiscard]] bool hasComponent(Entity entity) const
     {
-        return const_cast<World*>(this)->components_.getArray<T>().has(entity);
+        return components_.getArray<T>().has(entity);
     }
 
     /// @brief Remove a component from an entity

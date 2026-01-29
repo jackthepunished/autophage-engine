@@ -190,7 +190,8 @@ public:
     }
 
     /// @brief Reset the allocator (frees all allocations)
-    void reset() noexcept;
+    /// @param offset If specified, resets to this offset instead of 0
+    void reset(usize offset = 0) noexcept;
 
     /// @brief Get current usage
     [[nodiscard]] usize used() const noexcept { return offset_; }
@@ -322,7 +323,7 @@ public:
         : allocator_(allocator), savedOffset_(allocator.used())
     {}
 
-    ~ScopedAllocator() { allocator_.reset(); }
+    ~ScopedAllocator() { allocator_.reset(savedOffset_); }
 
     [[nodiscard]] void* alloc(usize size, usize alignment = 16) noexcept
     {

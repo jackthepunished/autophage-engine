@@ -60,7 +60,7 @@ public:
 /// @tparam Derived CRTP derived class
 /// @brief Base class for systems with common functionality
 /// @tparam Derived CRTP derived class
-template <typename Derived> class System : public ISystem
+template <typename Derived> class System : public virtual ISystem
 {
 public:
     [[nodiscard]] TypeId systemId() const noexcept override { return typeId<Derived>(); }
@@ -75,10 +75,9 @@ public:
     void setEnabled(bool enabled) override { enabled_ = enabled; }
 
 protected:
-    explicit System(std::string name = "UnnamedSystem") : name_(std::move(name)) {}
+    explicit System(String name = "UnnamedSystem") : name_(std::move(name)) {}
 
-private:
-    std::string name_;
+    String name_;
     bool enabled_ = true;
 };
 

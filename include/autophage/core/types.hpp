@@ -67,20 +67,19 @@ using Byte = std::byte;
 
 /// @brief Span type for non-owning views
 #if AUTOPHAGE_HAS_SPAN
-template <typename T>
-using Span = std::span<T>;
+template <typename T> using Span = std::span<T>;
 #endif
 
 /// @brief Optional type
-template <typename T>
-using Optional = std::optional<T>;
+template <typename T> using Optional = std::optional<T>;
 
 // =============================================================================
 // Error Handling
 // =============================================================================
 
 /// @brief Error codes for engine operations
-enum class ErrorCode : u32 {
+enum class ErrorCode : u32
+{
     Success = 0,
     InvalidArgument,
     OutOfMemory,
@@ -95,19 +94,31 @@ enum class ErrorCode : u32 {
 };
 
 /// @brief Convert error code to string
-[[nodiscard]] constexpr StringView toString(ErrorCode code) noexcept {
+[[nodiscard]] constexpr StringView toString(ErrorCode code) noexcept
+{
     switch (code) {
-        case ErrorCode::Success: return "Success";
-        case ErrorCode::InvalidArgument: return "InvalidArgument";
-        case ErrorCode::OutOfMemory: return "OutOfMemory";
-        case ErrorCode::NotFound: return "NotFound";
-        case ErrorCode::AlreadyExists: return "AlreadyExists";
-        case ErrorCode::InvalidState: return "InvalidState";
-        case ErrorCode::Timeout: return "Timeout";
-        case ErrorCode::NotImplemented: return "NotImplemented";
-        case ErrorCode::SystemError: return "SystemError";
-        case ErrorCode::ValidationFailed: return "ValidationFailed";
-        case ErrorCode::RollbackRequired: return "RollbackRequired";
+        case ErrorCode::Success:
+            return "Success";
+        case ErrorCode::InvalidArgument:
+            return "InvalidArgument";
+        case ErrorCode::OutOfMemory:
+            return "OutOfMemory";
+        case ErrorCode::NotFound:
+            return "NotFound";
+        case ErrorCode::AlreadyExists:
+            return "AlreadyExists";
+        case ErrorCode::InvalidState:
+            return "InvalidState";
+        case ErrorCode::Timeout:
+            return "Timeout";
+        case ErrorCode::NotImplemented:
+            return "NotImplemented";
+        case ErrorCode::SystemError:
+            return "SystemError";
+        case ErrorCode::ValidationFailed:
+            return "ValidationFailed";
+        case ErrorCode::RollbackRequired:
+            return "RollbackRequired";
     }
     return "Unknown";
 }
@@ -118,29 +129,24 @@ enum class ErrorCode : u32 {
 
 #if AUTOPHAGE_HAS_EXPECTED
 
-template <typename T, typename E>
-using Expected = std::expected<T, E>;
+template <typename T, typename E> using Expected = std::expected<T, E>;
 
-template <typename E>
-using Unexpected = std::unexpected<E>;
+template <typename E> using Unexpected = std::unexpected<E>;
 
-template <typename T>
-using Result = std::expected<T, ErrorCode>;
+template <typename T> using Result = std::expected<T, ErrorCode>;
 
 using VoidResult = std::expected<void, ErrorCode>;
 
 #else
 
 /// @brief Simple Result type fallback when std::expected is not available
-template <typename T>
-class Result {
+template <typename T> class Result
+{
 public:
     Result(T value) : data_(std::move(value)) {}
     Result(ErrorCode error) : data_(error) {}
 
-    [[nodiscard]] bool hasValue() const noexcept {
-        return std::holds_alternative<T>(data_);
-    }
+    [[nodiscard]] bool hasValue() const noexcept { return std::holds_alternative<T>(data_); }
 
     [[nodiscard]] explicit operator bool() const noexcept { return hasValue(); }
 
@@ -148,27 +154,22 @@ public:
     [[nodiscard]] const T& value() const& { return std::get<T>(data_); }
     [[nodiscard]] T&& value() && { return std::get<T>(std::move(data_)); }
 
-    [[nodiscard]] ErrorCode error() const noexcept {
-        return std::get<ErrorCode>(data_);
-    }
+    [[nodiscard]] ErrorCode error() const noexcept { return std::get<ErrorCode>(data_); }
 
-    [[nodiscard]] T valueOr(T defaultValue) const {
-        return hasValue() ? value() : defaultValue;
-    }
+    [[nodiscard]] T valueOr(T defaultValue) const { return hasValue() ? value() : defaultValue; }
 
 private:
     std::variant<T, ErrorCode> data_;
 };
 
 /// @brief Void result specialization
-class VoidResult {
+class VoidResult
+{
 public:
     VoidResult() : error_(ErrorCode::Success) {}
     VoidResult(ErrorCode error) : error_(error) {}
 
-    [[nodiscard]] bool hasValue() const noexcept {
-        return error_ == ErrorCode::Success;
-    }
+    [[nodiscard]] bool hasValue() const noexcept { return error_ == ErrorCode::Success; }
 
     [[nodiscard]] explicit operator bool() const noexcept { return hasValue(); }
 
@@ -184,31 +185,35 @@ private:
 // Engine-Specific Types
 // =============================================================================
 
-/// @brief Entity ID type (generational index)
-struct EntityId {
+/// @brief Entity identifier with generational index
+/// The generation prevents ABA problems when entities are recycled
+struct Entity
+{
     u32 index = 0;
     u32 generation = 0;
 
-    [[nodiscard]] constexpr bool isValid() const noexcept {
-        return generation != 0;
-    }
+    [[nodiscard]] constexpr bool isValid() const noexcept { return generation != 0; }
 
-    [[nodiscard]] constexpr bool operator==(const EntityId& other) const noexcept {
+    [[nodiscard]] constexpr bool operator==(const Entity& other) const noexcept
+    {
         return index == other.index && generation == other.generation;
     }
 
-    [[nodiscard]] constexpr bool operator!=(const EntityId& other) const noexcept {
+    [[nodiscard]] constexpr bool operator!=(const Entity& other) const noexcept
+    {
         return !(*this == other);
     }
 
-    [[nodiscard]] constexpr bool operator<(const EntityId& other) const noexcept {
-        if (generation != other.generation) return generation < other.generation;
-        return index < other.index;
+    [[nodiscard]] constexpr bool operator<(const Entity& other) const noexcept
+    {
+        if (index != other.index)
+            return index < other.index;
+        return generation < other.generation;
     }
 };
 
 /// @brief Invalid entity constant
-inline constexpr EntityId INVALID_ENTITY{0, 0};
+inline constexpr Entity INVALID_ENTITY{0, 0};
 
 /// @brief Component type ID (compile-time hash)
 using ComponentTypeId = u64;
