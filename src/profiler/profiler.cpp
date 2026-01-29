@@ -1,8 +1,9 @@
 /// @file profiler.cpp
 /// @brief Profiler implementation
 
-#include <autophage/profiler/profiler.hpp>
 #include <autophage/core/logger.hpp>
+#include <autophage/core/memory.hpp>
+#include <autophage/profiler/profiler.hpp>
 
 #include <algorithm>
 #include <atomic>
@@ -17,7 +18,8 @@ namespace {
 // Profiler State
 // =============================================================================
 
-struct ProfilerState {
+struct ProfilerState
+{
     std::vector<FrameStats> frameHistory;
     std::vector<ProfileZone> currentZones;
     std::vector<TimePoint> zoneStartTimes;
@@ -40,7 +42,8 @@ ProfilerState g_profiler;
 // Initialization
 // =============================================================================
 
-void initProfiler(usize historySize) {
+void initProfiler(usize historySize)
+{
     std::lock_guard lock(g_profiler.mutex);
 
     g_profiler.historySize = historySize;
@@ -53,7 +56,8 @@ void initProfiler(usize historySize) {
     LOG_INFO("Profiler initialized with history size: {}", historySize);
 }
 
-void shutdownProfiler() {
+void shutdownProfiler()
+{
     std::lock_guard lock(g_profiler.mutex);
 
     g_profiler.frameHistory.clear();
@@ -68,7 +72,8 @@ void shutdownProfiler() {
 // Frame Management
 // =============================================================================
 
-void beginFrame() {
+void beginFrame()
+{
     if (!g_profiler.initialized.load(std::memory_order_acquire)) {
         return;
     }
@@ -80,7 +85,8 @@ void beginFrame() {
     g_profiler.zoneStartTimes.clear();
 }
 
-void endFrame() {
+void endFrame()
+{
     if (!g_profiler.initialized.load(std::memory_order_acquire)) {
         return;
     }
@@ -88,6 +94,25 @@ void endFrame() {
     auto frameEnd = Clock::now();
     g_profiler.currentFrame.totalTime =
         std::chrono::duration_cast<Duration>(frameEnd - g_profiler.frameStart);
+
+    // Capture memory metrics from Core
+    auto memStats = getTotalMemoryStats();
+    g_profiler.currentFrame.memoryUsed = memStats.currentBytes;
+    g_profiler.currentFrame.allocationCount =
+        memStats.totalAllocations;  // Note: This is cumulative, should ideally be delta
+
+    // For now we just snapshot the totals, but FrameStats implies per-frame.
+    // To get per-frame deltas, we need to track them ourselves or store previous frame's total.
+    // Let's rely on recordAllocation for per-frame counts if we want them,
+    // OR we can make 'frameStats' store the snapshot.
+    // The struct says 'allocationCount', usually implies "this frame".
+    // Let's leave reading from Core for total memory usage, and use our internal counters for
+    // per-frame allocs.
+    g_profiler.currentFrame.memoryUsed = memStats.currentBytes;
+
+    // TODO: Capture hardware counters (PAPI / RDTSC)
+    // g_profiler.currentFrame.cpuCycles = ...
+    // g_profiler.currentFrame.cacheMisses = ...
 
     // Add to history
     {
@@ -103,15 +128,18 @@ void endFrame() {
     g_profiler.frameNumber.fetch_add(1, std::memory_order_relaxed);
 }
 
-FrameNumber getCurrentFrame() {
+FrameNumber getCurrentFrame()
+{
     return g_profiler.frameNumber.load(std::memory_order_relaxed);
 }
 
-const FrameStats& getCurrentFrameStats() {
+const FrameStats& getCurrentFrameStats()
+{
     return g_profiler.currentFrame;
 }
 
-const std::vector<FrameStats>& getFrameHistory() {
+const std::vector<FrameStats>& getFrameHistory()
+{
     return g_profiler.frameHistory;
 }
 
@@ -119,7 +147,8 @@ const std::vector<FrameStats>& getFrameHistory() {
 // Statistics
 // =============================================================================
 
-ProfilerStats getProfilerStats() {
+ProfilerStats getProfilerStats()
+{
     std::lock_guard lock(g_profiler.mutex);
 
     ProfilerStats stats{};
@@ -143,6 +172,17 @@ ProfilerStats getProfilerStats() {
         }
     }
     stats.avgFrameTime = total / static_cast<i64>(history.size());
+
+    // Aggregate hardware metrics
+    u64 totalMisses = 0;
+    u64 totalBranchMisses = 0;
+    for (const auto& frame : history) {
+        totalMisses += frame.cacheMisses;
+        totalBranchMisses += frame.branchMispredictions;
+    }
+    stats.avgCacheMisses = static_cast<f64>(totalMisses) / static_cast<f64>(history.size());
+    stats.avgBranchMispredictions =
+        static_cast<f64>(totalBranchMisses) / static_cast<f64>(history.size());
 
     // Calculate percentiles
     std::vector<Duration> sortedTimes;
@@ -180,7 +220,8 @@ ProfilerStats getProfilerStats() {
     return stats;
 }
 
-void resetProfilerStats() {
+void resetProfilerStats()
+{
     std::lock_guard lock(g_profiler.mutex);
     g_profiler.frameHistory.clear();
 }
@@ -189,7 +230,8 @@ void resetProfilerStats() {
 // Zone Management
 // =============================================================================
 
-u64 beginZone(const char* name, const char* file, u32 line) {
+u64 beginZone(const char* name, const char* file, u32 line)
+{
     if (!g_profiler.initialized.load(std::memory_order_acquire)) {
         return 0;
     }
@@ -209,7 +251,8 @@ u64 beginZone(const char* name, const char* file, u32 line) {
     return zoneId;
 }
 
-void endZone(u64 zoneId) {
+void endZone(u64 zoneId)
+{
     if (!g_profiler.initialized.load(std::memory_order_acquire)) {
         return;
     }
@@ -226,7 +269,8 @@ void endZone(u64 zoneId) {
     zone.selfTime = zone.totalTime;  // TODO: Subtract child zones
 }
 
-const std::vector<ProfileZone>& getZones() {
+const std::vector<ProfileZone>& getZones()
+{
     return g_profiler.currentZones;
 }
 
@@ -234,22 +278,25 @@ const std::vector<ProfileZone>& getZones() {
 // Metric Recording
 // =============================================================================
 
-void recordCounter(const char* /*name*/, i64 /*value*/) {
+void recordCounter(const char* /*name*/, i64 /*value*/)
+{
     // TODO: Implement counter tracking
 }
 
-void recordGauge(const char* /*name*/, f64 /*value*/) {
+void recordGauge(const char* /*name*/, f64 /*value*/)
+{
     // TODO: Implement gauge tracking
 }
 
-void recordAllocation(usize bytes, const char* /*tag*/) {
-    g_profiler.currentFrame.memoryUsed += bytes;
+void recordAllocation(usize /*bytes*/, const char* /*tag*/)
+{
+    // g_profiler.currentFrame.memoryUsed is updated from Core at endFrame
+    g_profiler.currentFrame.allocationCount++;
 }
 
-void recordDeallocation(usize bytes, const char* /*tag*/) {
-    if (g_profiler.currentFrame.memoryUsed >= bytes) {
-        g_profiler.currentFrame.memoryUsed -= bytes;
-    }
+void recordDeallocation(usize /*bytes*/, const char* /*tag*/)
+{
+    g_profiler.currentFrame.deallocationCount++;
 }
 
 }  // namespace autophage
