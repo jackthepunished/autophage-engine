@@ -1,0 +1,4 @@
+﻿MSBuild version 17.14.40+3e7442088 for .NET Framework
+
+  spdlog.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\spdlogd.lib
+  autophage_core.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_core.lib

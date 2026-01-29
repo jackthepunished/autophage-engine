@@ -1,0 +1,9 @@
+﻿MSBuild version 17.14.40+3e7442088 for .NET Framework
+
+  Catch2.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\Catch2d.lib
+  Catch2WithMain.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\Catch2Maind.lib
+  spdlog.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\spdlogd.lib
+  autophage_core.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_core.lib
+  autophage_profiler.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_profiler.lib
+autophage_profiler.lib(profiler.obj) : error LNK2019: çözümlenmemiş dış sembol "void __cdecl autophage::logInfo<unsigned __int64 &>(char const *,unsigned __int64 &)" (??$logInfo@AEA_K@autophage@@YAXPEBDAEA_K@Z) için "void __cdecl autophage::initProfiler(unsigned __int64)" (?initProfiler@autophage@@YAX_K@Z) işlevinde başvuruldu [D:\dev\autophage-engine\build\tests\autophage_tests_profiler.vcxproj]
+D:\dev\autophage-engine\build\bin\Debug\autophage_tests_profiler.exe : fatal error LNK1120: 1 çözümlenmemiş dışlar [D:\dev\autophage-engine\build\tests\autophage_tests_profiler.vcxproj]

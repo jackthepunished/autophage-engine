@@ -1,0 +1,63 @@
+﻿MSBuild version 17.14.40+3e7442088 for .NET Framework
+
+  Catch2.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\Catch2d.lib
+  Catch2WithMain.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\Catch2Maind.lib
+  spdlog.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\spdlogd.lib
+  autophage_core.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_core.lib
+  autophage_ecs.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_ecs.lib
+  test_entity.cpp
+D:\dev\autophage-engine\tests\ecs\test_entity.cpp(21,9): error C2872: 'INVALID_ENTITY': belirsiz simge [D:\dev\autophage-engine\build\tests\autophage_tests_ecs.vcxproj]
+      D:\dev\autophage-engine\include\autophage\core\types.hpp(211,27):
+      'const autophage::EntityId autophage::INVALID_ENTITY' olabilirdi
+      D:\dev\autophage-engine\include\autophage\ecs\entity.hpp(41,25):
+      veya       'const autophage::ecs::Entity autophage::ecs::INVALID_ENTITY'
+  
+D:\dev\autophage-engine\tests\ecs\test_entity.cpp(22,9): error C2872: 'INVALID_ENTITY': belirsiz simge [D:\dev\autophage-engine\build\tests\autophage_tests_ecs.vcxproj]
+      D:\dev\autophage-engine\include\autophage\core\types.hpp(211,27):
+      'const autophage::EntityId autophage::INVALID_ENTITY' olabilirdi
+      D:\dev\autophage-engine\include\autophage\ecs\entity.hpp(41,25):
+      veya       'const autophage::ecs::Entity autophage::ecs::INVALID_ENTITY'
+  
+D:\dev\autophage-engine\tests\ecs\test_entity.cpp(23,9): error C2872: 'INVALID_ENTITY': belirsiz simge [D:\dev\autophage-engine\build\tests\autophage_tests_ecs.vcxproj]
+      D:\dev\autophage-engine\include\autophage\core\types.hpp(211,27):
+      'const autophage::EntityId autophage::INVALID_ENTITY' olabilirdi
+      D:\dev\autophage-engine\include\autophage\ecs\entity.hpp(41,25):
+      veya       'const autophage::ecs::Entity autophage::ecs::INVALID_ENTITY'
+  
+D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9): error C2872: 'INVALID_ENTITY': belirsiz simge [D:\dev\autophage-engine\build\tests\autophage_tests_ecs.vcxproj]
+      D:\dev\autophage-engine\include\autophage\core\types.hpp(211,27):
+      'const autophage::EntityId autophage::INVALID_ENTITY' olabilirdi
+      D:\dev\autophage-engine\include\autophage\ecs\entity.hpp(41,25):
+      veya       'const autophage::ecs::Entity autophage::ecs::INVALID_ENTITY'
+  
+D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9): error C2664: 'bool autophage::ecs::EntityManager::destroy(autophage::ecs::Entity)' : 1 bağımsız değişkeni 'const autophage::EntityId' değerinden 'autophage::ecs::Entity' değerine dönüştürülemez [D:\dev\autophage-engine\build\tests\autophage_tests_ecs.vcxproj]
+      D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9):
+      Bu dönüştürmeyi gerçekleştirecek kullanıcı tanımlı dönüştürme işleci yok veya işleç çağrılamıyor
+      D:\dev\autophage-engine\include\autophage\ecs\entity.hpp(84,10):
+      'autophage::ecs::EntityManager::destroy' bildirimine bakın
+      D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9):
+      '(const autophage::EntityId)' bağımsız değişken listesi eşlenmeye çalışılırken
+  
+D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9): warning C4804: '<=' : işlemde güvenli olmayan 'bool' türü kullanımı [D:\dev\autophage-engine\build\tests\autophage_tests_ecs.vcxproj]
+D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9): error C2446: '<=': 'int' öğesinden 'Catch::Decomposer' öğesine dönüşüm yok [D:\dev\autophage-engine\build\tests\autophage_tests_ecs.vcxproj]
+      D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9):
+      'Catch::Decomposer::Decomposer': hiçbir aşırı yüklenmiş işlev tüm argüman türlerini dönüştüremez
+          D:\dev\autophage-engine\build\_deps\catch2-src\src\catch2\internal\catch_decomposer.hpp(327,5):
+          'Catch::Decomposer::Decomposer(Catch::Decomposer &&)' olabilirdi
+              D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9):
+              'Catch::Decomposer::Decomposer(Catch::Decomposer &&)' : 1 bağımsız değişkeni 'int' değerinden 'Catch::Decomposer &&' değerine dönüştürülemez
+                  D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9):
+                  Nedeni: 'int' değerinden 'Catch::Decomposer' değerine dönüştürülemez
+                  D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9):
+                  Dönüştürme ikinci bir kullanıcı tanımlı dönüştürme işleci veya oluşturucu gerektiriyor
+          D:\dev\autophage-engine\build\_deps\catch2-src\src\catch2\internal\catch_decomposer.hpp(327,5):
+          veya       'Catch::Decomposer::Decomposer(const Catch::Decomposer &)'
+              D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9):
+              'Catch::Decomposer::Decomposer(const Catch::Decomposer &)' : 1 bağımsız değişkeni 'int' değerinden 'const Catch::Decomposer &' değerine dönüştürülemez
+                  D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9):
+                  Nedeni: 'int' değerinden 'const Catch::Decomposer' değerine dönüştürülemez
+                  D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9):
+                  Dönüştürme ikinci bir kullanıcı tanımlı dönüştürme işleci veya oluşturucu gerektiriyor
+          D:\dev\autophage-engine\tests\ecs\test_entity.cpp(125,9):
+          '(int)' bağımsız değişken listesi eşlenmeye çalışılırken
+  

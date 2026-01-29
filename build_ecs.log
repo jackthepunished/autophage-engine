@@ -1,0 +1,76 @@
+﻿MSBuild version 17.14.40+3e7442088 for .NET Framework
+
+  Catch2.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\Catch2d.lib
+  Catch2WithMain.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\Catch2Maind.lib
+  spdlog.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\spdlogd.lib
+  autophage_core.vcxproj -> D:\dev\autophage-engine\build\lib\Debug\autophage_core.lib
+  ecs.cpp
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(130,1): error C2220: şu uyarı bir hata olarak değerlendirildi [D:\dev\autophage-engine\build\src\ecs\autophage_ecs.vcxproj]
+  (compiling source file '../../../src/ecs/ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\components.hpp(130,1): warning C4324: 'autophage::ecs::Transform': hizalama tanımlayıcısı nedeniyle yapının sonu dolduruldu [D:\dev\autophage-engine\build\src\ecs\autophage_ecs.vcxproj]
+  (compiling source file '../../../src/ecs/ecs.cpp')
+  
+D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(182,1): warning C4324: 'autophage::ecs::ComponentArray<autophage::ecs::Transform>::Entry': hizalama tanımlayıcısı nedeniyle yapının sonu dolduruldu [D:\dev\autophage-engine\build\src\ecs\autophage_ecs.vcxproj]
+  (compiling source file '../../../src/ecs/ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(182,1):
+      şablon örneği oluşturma bağlamı (önce en eski olan)
+          D:\dev\autophage-engine\include\autophage\ecs\systems.hpp(35,11):
+          derlenen şablon işlevi 'void autophage::ecs::Query<autophage::ecs::Transform,autophage::ecs::Velocity>::forEach<autophage::ecs::VelocitySystemScalar::update::<lambda_1>>(Func &&)' örneği oluşturma başvurusuna bakın
+          with
+          [
+              Func=autophage::ecs::VelocitySystemScalar::update::<lambda_1>
+          ]
+              D:\dev\autophage-engine\include\autophage\ecs\systems.hpp(35,18):
+              'autophage::ecs::VelocitySystemScalar::update' içinde ilk 'autophage::ecs::Query<autophage::ecs::Transform,autophage::ecs::Velocity>::forEach' başvurusuna bakın
+          D:\dev\autophage-engine\include\autophage\ecs\query.hpp(34,17):
+          derlenen şablon işlevi 'void autophage::ecs::ComponentArray<autophage::ecs::Transform>::forEach<autophage::ecs::Query<autophage::ecs::Transform,autophage::ecs::Velocity>::forEach::<lambda_1>>(Func &&)' örneği oluşturma başvurusuna bakın
+          with
+          [
+              Func=autophage::ecs::Query<autophage::ecs::Transform,autophage::ecs::Velocity>::forEach::<lambda_1>
+          ]
+          D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(180,12):
+          'autophage::ecs::ComponentArray<autophage::ecs::Transform>::Entry' sınıfı derlenirken
+  
+D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(182,1): warning C4324: 'autophage::ecs::ComponentArray<autophage::ecs::Velocity>::Entry': hizalama tanımlayıcısı nedeniyle yapının sonu dolduruldu [D:\dev\autophage-engine\build\src\ecs\autophage_ecs.vcxproj]
+  (compiling source file '../../../src/ecs/ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(182,1):
+      şablon örneği oluşturma bağlamı (önce en eski olan)
+          D:\dev\autophage-engine\include\autophage\ecs\systems.hpp(189,11):
+          derlenen şablon işlevi 'void autophage::ecs::Query<autophage::ecs::Velocity,autophage::ecs::Mass>::forEach<autophage::ecs::GravitySystem::update::<lambda_1>>(Func &&)' örneği oluşturma başvurusuna bakın
+          with
+          [
+              Func=autophage::ecs::GravitySystem::update::<lambda_1>
+          ]
+              D:\dev\autophage-engine\include\autophage\ecs\systems.hpp(189,18):
+              'autophage::ecs::GravitySystem::update' içinde ilk 'autophage::ecs::Query<autophage::ecs::Velocity,autophage::ecs::Mass>::forEach' başvurusuna bakın
+          D:\dev\autophage-engine\include\autophage\ecs\query.hpp(34,17):
+          derlenen şablon işlevi 'void autophage::ecs::ComponentArray<autophage::ecs::Velocity>::forEach<autophage::ecs::Query<autophage::ecs::Velocity,autophage::ecs::Mass>::forEach::<lambda_1>>(Func &&)' örneği oluşturma başvurusuna bakın
+          with
+          [
+              Func=autophage::ecs::Query<autophage::ecs::Velocity,autophage::ecs::Mass>::forEach::<lambda_1>
+          ]
+          D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(180,12):
+          'autophage::ecs::ComponentArray<autophage::ecs::Velocity>::Entry' sınıfı derlenirken
+  
+D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(182,1): warning C4324: 'autophage::ecs::ComponentArray<autophage::ecs::AABB>::Entry': hizalama tanımlayıcısı nedeniyle yapının sonu dolduruldu [D:\dev\autophage-engine\build\src\ecs\autophage_ecs.vcxproj]
+  (compiling source file '../../../src/ecs/ecs.cpp')
+      D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(182,1):
+      şablon örneği oluşturma bağlamı (önce en eski olan)
+          D:\dev\autophage-engine\include\autophage\ecs\systems.hpp(263,11):
+          derlenen şablon işlevi 'void autophage::ecs::Query<autophage::ecs::Transform,autophage::ecs::AABB>::forEach<autophage::ecs::BoundsSystem::update::<lambda_1>>(Func &&)' örneği oluşturma başvurusuna bakın
+          with
+          [
+              Func=autophage::ecs::BoundsSystem::update::<lambda_1>
+          ]
+              D:\dev\autophage-engine\include\autophage\ecs\systems.hpp(263,18):
+              'autophage::ecs::BoundsSystem::update' içinde ilk 'autophage::ecs::Query<autophage::ecs::Transform,autophage::ecs::AABB>::forEach' başvurusuna bakın
+          D:\dev\autophage-engine\include\autophage\ecs\query.hpp(36,79):
+          derlenen sınıf şablon örneği oluşturma 'autophage::ecs::ComponentArray<autophage::ecs::AABB>' başvurusuna bakın
+          D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(113,10):
+          sınıf şablon üye işlevi 'void autophage::ecs::ComponentArray<autophage::ecs::AABB>::remove(autophage::ecs::Entity)' derlenirken
+              D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(130,15):
+              'autophage::ecs::ComponentArray<autophage::ecs::AABB>::onEntityDestroyed' içinde ilk 'autophage::ecs::ComponentArray<autophage::ecs::AABB>::remove' başvurusuna bakın
+          D:\dev\autophage-engine\include\autophage\ecs\component_storage.hpp(180,12):
+          'autophage::ecs::ComponentArray<autophage::ecs::AABB>::Entry' sınıfı derlenirken
+  
