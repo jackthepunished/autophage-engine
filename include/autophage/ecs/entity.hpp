@@ -9,6 +9,8 @@
 
 namespace autophage::ecs {
 
+using Entity = autophage::Entity;
+
 // =============================================================================
 // Entity Manager
 // =============================================================================
@@ -120,9 +122,9 @@ private:
 }  // namespace autophage::ecs
 
 // Hash support for Entity
-template <> struct std::hash<autophage::ecs::Entity>
+template <> struct std::hash<autophage::Entity>
 {
-    [[nodiscard]] size_t operator()(const autophage::ecs::Entity& e) const noexcept
+    [[nodiscard]] size_t operator()(const autophage::Entity& e) const noexcept
     {
         return std::hash<uint64_t>{}((static_cast<uint64_t>(e.index) << 32) | e.generation);
     }

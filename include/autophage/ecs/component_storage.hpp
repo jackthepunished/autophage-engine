@@ -8,7 +8,9 @@
 #include <autophage/core/types.hpp>
 #include <autophage/ecs/entity.hpp>
 
+#include <algorithm>
 #include <memory>
+#include <stdexcept>
 #include <unordered_map>
 #include <vector>
 
@@ -57,7 +59,7 @@ public:
 
     [[nodiscard]] TypeId componentType() const noexcept override { return typeId<T>(); }
 
-    [[nodiscard]] usize size() const noexcept override { return dense_.size(); }
+    [[nodiscard]] usize size() const noexcept override { return denseEntities_.size(); }
 
     /// @brief Add or replace a component for an entity
     /// @return Reference to the component
@@ -273,8 +275,8 @@ public:
     /// @brief Notify all arrays that an entity was destroyed
     void onEntityDestroyed(Entity entity)
     {
-        for (auto& [id, array] : arrays_) {
-            array->onEntityDestroyed(entity);
+        for (auto& pair : arrays_) {
+            pair.second->onEntityDestroyed(entity);
         }
     }
 

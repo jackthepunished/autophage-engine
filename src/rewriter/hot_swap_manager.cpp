@@ -33,9 +33,7 @@ bool HotSwapManager::hotSwapFromSource(const std::string& systemName, const std:
     auto updateFunc = reinterpret_cast<JITSystem::UpdateFunc>(funcPtr);
 
     // 4. Replace the system in the world
-    // We replace the ISystem but pinpoint it via the systemName if we had a registry lookup by
-    // name. For now, we assume we are replacing the specific system by type if it was registered.
-    world_.replaceSystem<ecs::ISystem, JITSystem>(updateFunc);
+    world_.replaceSystemByName<JITSystem>(systemName.c_str(), updateFunc);
 
     LOG_INFO("Successfully hot-swapped system '{}' with JIT'd implementation.", systemName);
 

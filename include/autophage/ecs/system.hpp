@@ -58,8 +58,6 @@ public:
 /// @tparam Derived CRTP derived class
 /// @brief Base class for systems with common functionality
 /// @tparam Derived CRTP derived class
-/// @brief Base class for systems with common functionality
-/// @tparam Derived CRTP derived class
 template <typename Derived> class System : public virtual ISystem
 {
 public:
@@ -167,6 +165,38 @@ public:
         TypeId id = typeId<T>();
         for (auto it = systems_.begin(); it != systems_.end(); ++it) {
             if ((*it)->systemId() == id) {
+                // Shutdown old system
+                (*it)->shutdown(world);
+
+                // Create new system
+                auto newSystem = std::make_unique<NewT>(std::forward<Args>(args)...);
+                NewT& ref = *newSystem;
+
+                // Replace in registry
+                *it = std::move(newSystem);
+
+                // Initialize new system
+                ref.init(world);
+
+                return ref;
+            }
+        }
+
+        // If not found, just register as new
+        return registerSystem<NewT>(std::forward<Args>(args)...);
+    }
+
+    /// @brief Replace an existing system by name with a new one
+    /// @tparam NewT The type of the new system implementation
+    /// @param world The ECS world
+    /// @param name The name of the system to replace
+    /// @param args Arguments for the new system constructor
+    /// @return Reference to the new system
+    template <typename NewT, typename... Args>
+    NewT& replaceSystemByName(World& world, const char* name, Args&&... args)
+    {
+        for (auto it = systems_.begin(); it != systems_.end(); ++it) {
+            if (std::string((*it)->name()) == name) {
                 // Shutdown old system
                 (*it)->shutdown(world);
 

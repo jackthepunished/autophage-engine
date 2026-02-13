@@ -1,12 +1,18 @@
 #pragma once
 
+#include <autophage/ecs/system.hpp>
 #include <autophage/ecs/world.hpp>
 
 #include <string>
 #include <vector>
 
+namespace autophage {
+namespace ecs {
+class World;
+class ISystem;
+}  // namespace ecs
 
-namespace autophage::rewriter {
+namespace rewriter {
 
 /// @brief Generates C++ code for ECS systems
 class Rewriter
@@ -26,4 +32,28 @@ public:
     std::string generateSystemClass(const std::string& className, const std::string& logic);
 };
 
-}  // namespace autophage::rewriter
+/// @brief Proxy system that delegates to a JIT-compiled function
+class JITSystem : public autophage::ecs::System<JITSystem>
+{
+public:
+    using UpdateFunc = void (*)(autophage::ecs::World&, float);
+
+    explicit JITSystem(UpdateFunc updateFunc)
+        : autophage::ecs::System<JITSystem>("JITSystem"), updateFunc_(updateFunc)
+    {
+        (void)updateFunc;
+    }
+
+    void update(autophage::ecs::World& world, float dt) override
+    {
+        if (updateFunc_) {
+            updateFunc_(world, dt);
+        }
+    }
+
+private:
+    UpdateFunc updateFunc_ = nullptr;
+};
+
+}  // namespace rewriter
+}  // namespace autophage
