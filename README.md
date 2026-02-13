@@ -7,7 +7,7 @@ Autophage Engine is a research-grade, production-inspired game engine exploring 
 
 ##  Project Status
 **Current Phase:** Phase 1 (Core Systems)
-> The project is currently in early active development. The foundational systems (Memory, Logging, Build System) are complete. Work is cleaner on the Runtime Profiler and ECS.
+> Phase 0 (foundation) is complete: build system, CI, logging, memory utilities, and core platform/types are in place. Phase 1 is in progress with a functional ECS and basic profiler, and ongoing work on deeper profiling and ECS performance.
 
 ##  Key Features
 - **Runtime Profiling**: Deep visibility into CPU, memory, and frame timing.

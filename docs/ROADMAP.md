@@ -16,26 +16,26 @@ Phase 4: Polish         [Q1 2026]  ░░░░░░░░░░ Tools + Demo
 
 ---
 
-## Phase 0: Foundation (Current)
+## Phase 0: Foundation (Complete)
 
 > Build infrastructure and project skeleton
 
 ### 0.1 Project Setup
 - [x] Technical documentation
 - [x] Agent and skill definitions
-- [ ] CMake build system (C++23, multi-platform)
-- [ ] Folder structure and module boundaries
-- [ ] CI/CD pipeline (GitHub Actions)
-- [ ] Code style (clang-format, clang-tidy)
-- [ ] Testing framework (Catch2/GoogleTest)
-- [ ] Benchmarking framework (nanobench)
+- [x] CMake build system (C++23, multi-platform)
+- [x] Folder structure and module boundaries
+- [x] CI/CD pipeline (GitHub Actions)
+- [x] Code style (clang-format, clang-tidy)
+- [x] Testing framework (Catch2)
+- [x] Benchmarking framework (nanobench)
 
 ### 0.2 Core Utilities
-- [ ] Logging system (spdlog integration)
-- [ ] Assert and error handling macros
-- [ ] Memory utilities (aligned allocation, pool allocator base)
-- [ ] Type ID system (compile-time hashing)
-- [ ] Platform abstraction layer
+- [x] Logging system (spdlog integration)
+- [x] Assert and error handling macros
+- [x] Memory utilities (aligned allocation, pool allocator base)
+- [x] Type ID system (compile-time hashing)
+- [x] Platform abstraction layer
 
 ### Deliverables
 - Compiling empty project on Windows/Linux
@@ -49,28 +49,29 @@ Phase 4: Polish         [Q1 2026]  ░░░░░░░░░░ Tools + Demo
 > Runtime Profiler + Entity Component System
 
 ### 1.1 Runtime Profiler
-- [ ] Scoped timer with hierarchical tracking
-- [ ] Frame time statistics (avg, p95, spikes)
-- [ ] Memory allocation tracking
+- [x] Scoped timer (zones)
+- [x] Frame time statistics (avg, p95, spikes)
+- [x] Memory allocation tracking (basic)
 - [ ] Double-buffered metric collection
 - [ ] Platform backends:
   - [ ] Windows (QueryPerformanceCounter, ETW)
-  - [ ] Linux (perf_event, RDTSC)
+  - [ ] Linux (perf_event)
+  - [x] RDTSC-based cycles (basic)
 - [ ] GPU timing queries (placeholder/Vulkan)
 
 ### 1.2 ECS Foundation
-- [ ] Entity ID management (generational indices)
+- [x] Entity ID management (generational indices)
 - [ ] Component storage (archetype-based)
-- [ ] AoS storage implementation
+- [x] AoS storage implementation (sparse set)
 - [ ] SoA storage implementation
 - [ ] Runtime layout conversion (AoS ↔ SoA)
-- [ ] System registration and execution
-- [ ] Query system (component iteration)
+- [x] System registration and execution
+- [x] Query system (component iteration)
 
 ### 1.3 Basic Systems
 - [ ] Transform system (position, rotation, scale)
-- [ ] Hierarchy system (parent-child)
-- [ ] Velocity system (simple physics)
+- [x] Hierarchy system (parent-child)
+- [x] Velocity system (simple physics)
 
 ### Deliverables
 - Profiler capturing frame metrics
